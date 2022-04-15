@@ -11,31 +11,12 @@ import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
-void set120Hz() async {
-  var modes = await FlutterDisplayMode.supported;
-  modes.forEach(print);
-  try {
-    await FlutterDisplayMode.setPreferredMode(modes.last);
-
-    /// e.code =>
-    /// noAPI - No API support. Only Marshmallow and above.
-    /// noActivity -  Activity is not available. Probably app is in background
-  } on PlatformException {
-    return;
-  }
-  MyGame.frameRate = modes.last.refreshRate;
-}
 
 void main() {
   runApp(GameWidget(
     game: MyGame(),
   ));
   FlutterDisplayMode.setHighRefreshRate();
-  // try {
-  //   if (!kIsWeb && Platform.isAndroid) {
-  //     set120Hz();
-  //   }
-  // } catch (e) {}
 }
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
@@ -104,17 +85,8 @@ class BubbleComponent extends RiveComponent
     super.update(dt);
     position += velocity * dt * 10000;
     velocity *= 0.99;
-    if (velocity.y.abs() > maxVelocity) {
-      maxVelocity = velocity.y.abs();
-      print(velocity);
-    }
-    if (velocity.x.abs() < 0.1 && velocity.y.abs() > 0.5) {
-      // velocity = Vector2.zero();
-      // print('stopped');
-    }
-    position.y += dt * 10;
-    
 
+    position.y += dt * 10;
   }
 
   void edgeBounce() {
