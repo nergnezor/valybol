@@ -16,11 +16,13 @@ void main() {
   runApp(GameWidget(
     game: MyGame(),
   ));
+if (!kIsWeb && Platform.isAndroid) {
   try {
   FlutterDisplayMode.setHighRefreshRate();
   } catch (e) {
     print(e);
   }
+}
 }
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
@@ -33,6 +35,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   Future<void> onLoad() async {
     BubbleComponent.screenSize = size;
     await super.onLoad();
+createBubble(200,200);
   }
 
   Future<void> createBubble(double xPosition, double yPosition) async {
