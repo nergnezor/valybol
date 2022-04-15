@@ -16,7 +16,11 @@ void main() {
   runApp(GameWidget(
     game: MyGame(),
   ));
+  try {
   FlutterDisplayMode.setHighRefreshRate();
+  } catch (e) {
+    print(e);
+  }
 }
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
