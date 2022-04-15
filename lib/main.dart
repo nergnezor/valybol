@@ -82,6 +82,7 @@ class BubbleComponent extends RiveComponent
   Vector2 velocity = Vector2.zero();
   static late Vector2 screenSize;
   double lifeTime = 0;
+  double maxVelocity = 0;
 
   @override
   Future<void>? onLoad() {
@@ -97,33 +98,39 @@ class BubbleComponent extends RiveComponent
 
   @override
   void update(double dt) {
-    lifeTime += dt;
     edgeBounce();
+    lifeTime += dt;
     float(dt);
     super.update(dt);
     position += velocity * dt * 10000;
     velocity *= 0.99;
+    if (velocity.y.abs() > maxVelocity) {
+      maxVelocity = velocity.y.abs();
+      print(velocity);
+    }
+    if (velocity.x.abs() < 0.1 && velocity.y.abs() > 0.5) {
+      // velocity = Vector2.zero();
+      // print('stopped');
+    }
     position.y += dt * 10;
+    
+
   }
 
   void edgeBounce() {
     //  bounce
-    if (position.x < 0) {
-      position.x = 0;
+    if (position.x < 0 || position.x > screenSize.x - size.x) {
       velocity.x = -velocity.x;
+      scale.x -= velocity.x.abs() * 2;
     }
-    if (position.x > screenSize.x - size.x) {
-      position.x = screenSize.x - size.x;
-      velocity.x = -velocity.x;
-    }
-    if (position.y < 0) {
-      position.y = 0;
+    if (position.y < 0 || position.y > screenSize.y - size.y) {
       velocity.y = -velocity.y;
+      scale.y -= velocity.y.abs() * 2;
     }
-    if (position.y > screenSize.y - size.y) {
-      position.y = screenSize.y - size.y;
-      velocity.y = -velocity.y;
-    }
+    position.clamp(Vector2.zero(), screenSize - size);
+    scale.x += (1 - scale.x) * 0.1;
+    scale.y += (1 - scale.y) * 0.1;
+    scale.clamp(Vector2.zero(), Vector2.all(1));
   }
 
   @override
@@ -148,6 +155,6 @@ class BubbleComponent extends RiveComponent
   }
 
   void float(double dt) {
-    position += Vector2.all(sin(lifeTime * 1) * dt * 10);
+    position += Vector2.all(sin(lifeTime * 3) * dt * 10);
   }
 }
