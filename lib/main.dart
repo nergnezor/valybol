@@ -30,12 +30,12 @@ void main() {
   runApp(GameWidget(
     game: MyGame(),
   ));
-
-  try {
-    if (!kIsWeb && Platform.isAndroid) {
-      set120Hz();
-    }
-  } catch (e) {}
+  FlutterDisplayMode.setHighRefreshRate();
+  // try {
+  //   if (!kIsWeb && Platform.isAndroid) {
+  //     set120Hz();
+  //   }
+  // } catch (e) {}
 }
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
@@ -81,10 +81,10 @@ class BubbleComponent extends RiveComponent
   late Fill fill;
   Vector2 velocity = Vector2.zero();
   static late Vector2 screenSize;
+  double lifeTime = 0;
 
   @override
   Future<void>? onLoad() {
-    
     controller = OneShotAnimation('Idle', autoplay: true);
     artboard.addController(controller);
     artboard.forEachComponent((child) {
@@ -97,9 +97,16 @@ class BubbleComponent extends RiveComponent
 
   @override
   void update(double dt) {
+    lifeTime += dt;
+    edgeBounce();
+    float(dt);
     super.update(dt);
     position += velocity * dt * 10000;
     velocity *= 0.99;
+    position.y += dt * 10;
+  }
+
+  void edgeBounce() {
     //  bounce
     if (position.x < 0) {
       position.x = 0;
@@ -117,28 +124,15 @@ class BubbleComponent extends RiveComponent
       position.y = screenSize.y - size.y;
       velocity.y = -velocity.y;
     }
-
   }
 
   @override
   bool onTapUp(TapUpInfo info) {
-    // print('handled?' + info.handled.toString());
-
-    // var er = artboard.children.first;
-    // .firstWhere(
-    //     (fill) => fill.name == 'fyllning');
     info.handled = true;
-    // var eri;
-    // for (var child in artboard.children) {
-    //   if (child.name == 'fyllning') {
-    //     eri = child;
-    //   }
-    // }
 
     if (!controller.isActive) {
       fill.paint.color = Colors.red.withOpacity(0.25);
       controller.isActive = true;
-      // print('tapped  and hopefully, it is moving');
     } else {
       gameRef.remove(this);
     }
@@ -148,10 +142,12 @@ class BubbleComponent extends RiveComponent
   @override
   bool onDragUpdate(DragUpdateInfo info) {
     position = info.eventPosition.game - size / 2;
-// move draggaable to the top
-    // gameRef.setDraggable(this, true);
     velocity = (info.delta.game / 60);
 
     return true;
+  }
+
+  void float(double dt) {
+    position += Vector2.all(sin(lifeTime * 1) * dt * 10);
   }
 }
