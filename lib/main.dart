@@ -109,7 +109,7 @@ class BubbleComponent extends RiveComponent
     position.clamp(Vector2.zero(), screenSize - size);
     scale.x += (1 - scale.x) * 0.1;
     scale.y += (1 - scale.y) * 0.1;
-    scale.clamp(Vector2.zero(), Vector2.all(1));
+    scale.clamp(Vector2.all(0.5), Vector2.all(1));
   }
 
   @override
