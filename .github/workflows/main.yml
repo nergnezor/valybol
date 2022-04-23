@@ -77,10 +77,10 @@ jobs:
           asset_path: apk/app-release.apk
           asset_name: Fling.apk
           asset_content_type: application/zip
-        - name: Slack notification
-          env:
-            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          uses: Ilshidur/action-slack@2.0.2
-          with:
-            args: 'https://github.com/nergnezor/bubblor/releases/download/${{ github.run_number }}/Fling.apk @channel' # Optional
+      - name: Slack notification
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        uses: Ilshidur/action-slack@2.0.2
+        with:
+          args: 'https://github.com/nergnezor/bubblor/releases/download/${{ github.run_number }}/Fling.apk @channel' # Optional
 
