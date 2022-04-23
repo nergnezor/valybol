@@ -47,8 +47,8 @@ createBubble(200,200);
   }
 
   @override
-  void onTapUp(int i, TapUpInfo info) {
-    super.onTapUp(i, info);
+  void onTapDown(int i, TapDownInfo info) {
+    super.onTapDown(i, info);
     print('handled 2?' + info.handled.toString());
     if (info.handled) {
       return;
@@ -113,7 +113,7 @@ class BubbleComponent extends RiveComponent
   }
 
   @override
-  bool onTapUp(TapUpInfo info) {
+  bool onTapDown(TapDownInfo info) {
     info.handled = true;
 
     if (!controller.isActive) {
@@ -129,7 +129,8 @@ class BubbleComponent extends RiveComponent
   bool onDragUpdate(DragUpdateInfo info) {
     position = info.eventPosition.game - size / 2;
     velocity = (info.delta.game / 60);
-
+size.width +=1;
+size.height +=1;
     return true;
   }
 
