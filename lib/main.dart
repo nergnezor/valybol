@@ -63,7 +63,7 @@ class BubbleComponent extends RiveComponent
   BubbleComponent({required this.artboard})
       : super(
             artboard: artboard,
-            size: Vector2.all(10);
+            size: Vector2.all(4));
 
   late OneShotAnimation controller;
   late Fill fill;
