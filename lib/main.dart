@@ -124,8 +124,9 @@ size.x +=1;
   }
 
   @override
-  void onTapUp(TapUpInfo info) {
+  bool onTapUp(TapUpInfo info) {
     growing=false;
+    return true;
   }
 
   @override
