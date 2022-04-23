@@ -129,8 +129,8 @@ class BubbleComponent extends RiveComponent
   bool onDragUpdate(DragUpdateInfo info) {
     position = info.eventPosition.game - size / 2;
     velocity = (info.delta.game / 60);
-size.x +=1;
-size.y +=1;
+    size.x +=1;
+    size.y +=1;
     return true;
   }
 
