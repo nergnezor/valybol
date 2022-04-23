@@ -63,7 +63,7 @@ class BubbleComponent extends RiveComponent
   BubbleComponent({required this.artboard})
       : super(
             artboard: artboard,
-            size: Vector2.all(Random().nextDouble() * 100 + 100));
+            size: Vector2.all(10);
 
   late OneShotAnimation controller;
   late Fill fill;
@@ -71,6 +71,7 @@ class BubbleComponent extends RiveComponent
   static late Vector2 screenSize;
   double lifeTime = 0;
   double maxVelocity = 0;
+  bool growing=true;
 
   @override
   Future<void>? onLoad() {
@@ -92,7 +93,10 @@ class BubbleComponent extends RiveComponent
     super.update(dt);
     position += velocity * dt * 10000;
     velocity *= 0.99;
-
+    if (growing){
+size.x +=1;
+    size.y +=1;
+    }
     position.y += dt * 10;
   }
 
@@ -115,22 +119,20 @@ class BubbleComponent extends RiveComponent
   @override
   bool onTapDown(TapDownInfo info) {
     info.handled = true;
-
-    if (!controller.isActive) {
-      fill.paint.color = Colors.red.withOpacity(0.25);
-      controller.isActive = true;
-    } else {
-      gameRef.remove(this);
-    }
+    gameRef.remove(this);
     return true;
+  }
+
+  @override
+  void onTapUp(TapUpInfo info) {
+    growing=false;
   }
 
   @override
   bool onDragUpdate(DragUpdateInfo info) {
     position = info.eventPosition.game - size / 2;
     velocity = (info.delta.game / 60);
-    size.x +=1;
-    size.y +=1;
+    
     return true;
   }
 
