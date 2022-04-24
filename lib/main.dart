@@ -125,6 +125,7 @@ scale.clamp(Vector2.all(0.5), Vector2.all(1));
 @override
 bool onTapDown(TapDownInfo info) {
 gameRef.remove(this);
+info.handled=true;
 return true;
 }
 
