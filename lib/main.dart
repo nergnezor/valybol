@@ -46,8 +46,8 @@ add(component);
 }
 
 @override
-void onTapDown(int i, TapDownInfo info) {
-super.onTapDown(i, info);
+void onDragStart(int i, DragStartInfo info) {
+super.onDragStart(i, info);
 print('handled 2?' + info.handled.toString());
 if (info.handled) {
 return;
