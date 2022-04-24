@@ -93,9 +93,15 @@ float(dt);
 super.update(dt);
 position += velocity * dt * 10000;
 velocity *= 0.99;
-if (velocity == Vector2.zero() && growing){
-size.x +=1;
-size.y +=1;
+if (growing){
+if (velocity == Vector2.zero()){
+size.x +=2;
+size.y +=2;
+position.x-=1;
+position.y-=1;
+} else{
+growing=false;
+}
 }
 position.y += dt * 10;
 }
