@@ -126,6 +126,10 @@ size.x +=2;
 size.y +=2;
 position.x-=1;
 position.y-=1;
+if (size.x>400){
+  gameRef.remove(this);
+}
+}
 return true;
 }
 
