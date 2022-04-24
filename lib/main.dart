@@ -124,15 +124,14 @@ scale.clamp(Vector2.all(0.5), Vector2.all(1));
 
 @override
 bool onTapDown(TapDownInfo info) {
-info.handled = true;
 gameRef.remove(this);
-return true;
+return false;
 }
 
 @override
 bool onTapUp(TapUpInfo info) {
-growing=false;
-return true;
+gameRef.remove(this);
+return false;
 }
 
 @override
