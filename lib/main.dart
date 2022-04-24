@@ -88,6 +88,9 @@ return super.onLoad();
 void update(double dt) {
 edgeBounce();
 lifeTime += dt;
+if (lifeTime>10.0){
+  gameRef.remove(this);
+}
 float(dt);
 super.update(dt);
 position += velocity * dt * 10000;
