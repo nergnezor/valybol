@@ -92,7 +92,6 @@ float(dt);
 super.update(dt);
 position += velocity * dt * 10000;
 velocity *= 0.99;
-
 position.y += dt * 10;
 }
 
@@ -113,14 +112,7 @@ scale.clamp(Vector2.all(0.5), Vector2.all(1));
 }
 
 @override
-bool onTapDown(TapDownInfo info) {
-gameRef.remove(this);
-info.handled=true;
-return true;
-}
-
-@override
-bool onTapUp(TapUpInfo info) {
+bool onDragCancel(){
 gameRef.remove(this);
 return false;
 }
