@@ -35,7 +35,6 @@ Color backgroundColor() => const Color(0xff171717);
 Future<void> onLoad() async {
 BubbleComponent.screenSize = size;
 await super.onLoad();
-createBubble(200,200);
 }
 
 Future<void> createBubble(double xPosition, double yPosition) async {
@@ -93,16 +92,7 @@ float(dt);
 super.update(dt);
 position += velocity * dt * 10000;
 velocity *= 0.99;
-if (growing){
-if (velocity == Vector2.zero()){
-size.x +=2;
-size.y +=2;
-position.x-=1;
-position.y-=1;
-} else{
-growing=false;
-}
-}
+
 position.y += dt * 10;
 }
 
@@ -140,6 +130,10 @@ bool onDragUpdate(DragUpdateInfo info) {
 position = info.eventPosition.game - size / 2;
 velocity = (info.delta.game / 60);
 
+size.x +=2;
+size.y +=2;
+position.x-=1;
+position.y-=1;
 return true;
 }
 
