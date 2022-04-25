@@ -62,7 +62,7 @@ final Artboard artboard;
 BubbleComponent({required this.artboard})
 : super(
 artboard: artboard,
-size: Vector2.all(4));
+size: Vector2.all(20));
 
 late OneShotAnimation controller;
 late Fill fill;
