@@ -89,13 +89,22 @@ void update(double dt) {
 edgeBounce();
 lifeTime += dt;
 if (lifeTime>10.0){
-  gameRef.remove(this);
+gameRef.remove(this);
 }
 float(dt);
 super.update(dt);
 position += velocity * dt * 10000;
 velocity *= 0.99;
 position.y += dt * 10;
+if (growing)
+{
+size.x +=2;
+size.y +=2;
+position.x-=1;
+position.y-=1;
+if (size.x>400){
+gameRef.remove(this);
+}}
 }
 
 void edgeBounce() {
@@ -115,8 +124,8 @@ scale.clamp(Vector2.all(0.5), Vector2.all(1));
 }
 
 @override
-bool onDragCancel(){
-gameRef.remove(this);
+bool onDragEnd(DragEndInfo info){
+growing=false;
 return false;
 }
 
@@ -125,13 +134,6 @@ bool onDragUpdate(DragUpdateInfo info) {
 position = info.eventPosition.game - size / 2;
 velocity = (info.delta.game / 60);
 
-size.x +=2;
-size.y +=2;
-position.x-=1;
-position.y-=1;
-if (size.x>400){
-  gameRef.remove(this);
-}
 return true;
 }
 
