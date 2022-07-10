@@ -10,6 +10,7 @@ import 'package:rive/rive.dart';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(GameWidget(
@@ -18,6 +19,7 @@ void main() {
   if (!kIsWeb && Platform.isAndroid) {
     try {
       FlutterDisplayMode.setHighRefreshRate();
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky)
     } catch (e) {
       print(e);
     }
