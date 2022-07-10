@@ -78,7 +78,7 @@ jobs:
           asset_name: Fling.apk
           asset_content_type: application/zip
       - name: Slack notification
-        if: false
+        #if: false
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         uses: Ilshidur/action-slack@2.0.2
