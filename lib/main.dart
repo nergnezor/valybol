@@ -19,7 +19,7 @@ void main() {
   if (!kIsWeb && Platform.isAndroid) {
     try {
       FlutterDisplayMode.setHighRefreshRate();
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky)
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     } catch (e) {
       print(e);
     }
