@@ -98,8 +98,9 @@ class BubbleComponent extends RiveComponent
       size.y += 2;
       position.x -= 1;
       position.y -= 1;
-      if (size.x > 100) {
-        gameRef.remove(this);
+      if (size.x > 150) {
+        growing=false;
+        //gameRef.remove(this);
       }
     }
   }
