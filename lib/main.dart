@@ -123,6 +123,7 @@ class BubbleComponent extends RiveComponent
 
   @override
   bool onDragStart(DragStartInfo info) {
+    info.handled=true;
     return false;
   }
   @override
