@@ -122,6 +122,10 @@ class BubbleComponent extends RiveComponent
   }
 
   @override
+  bool onDragStart(DragStartInfo info) {
+    return false;
+  }
+  @override
   bool onDragEnd(DragEndInfo info) {
     growing = false;
     return false;
