@@ -71,7 +71,7 @@ class BubbleComponent extends RiveComponent
   double lifeTime = 0;
   double maxVelocity = 0;
   bool growing = true;
-  AccelerometerEvent acc;
+  late AccelerometerEvent acc;
 
   @override
   Future<void>? onLoad() {
