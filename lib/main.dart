@@ -103,7 +103,7 @@ class BubbleComponent extends RiveComponent
     position.y += dt * 10;
     size.x = 100-position.y/1000;
     size.y=size.x;
-    position.x +=acc.x;
+    position.x =acc.x/120;
     if (growing) {
       size.x += 2;
       size.y += 2;
