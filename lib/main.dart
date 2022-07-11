@@ -11,6 +11,7 @@ import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter/services.dart';
+import 'package:sensors/sensors.dart';
 
 void main() {
   runApp(GameWidget(
@@ -70,6 +71,7 @@ class BubbleComponent extends RiveComponent
   double lifeTime = 0;
   double maxVelocity = 0;
   bool growing = true;
+  AccelerometerEvent acc;
 
   @override
   Future<void>? onLoad() {
@@ -80,6 +82,10 @@ class BubbleComponent extends RiveComponent
         fill = child as Fill;
       }
     });
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
+      accelerometerEvents.listen((AccelerometerEvent event) {
+        acc = event;
+      });
     return super.onLoad();
   }
 
@@ -97,6 +103,7 @@ class BubbleComponent extends RiveComponent
     position.y += dt * 10;
     size.x = 100-position.y/1000;
     size.y=size.x;
+    position.x +=acc.x;
     if (growing) {
       size.x += 2;
       size.y += 2;
