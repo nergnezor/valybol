@@ -93,7 +93,7 @@ class BubbleComponent extends RiveComponent
   void update(double dt) {
     if (acc != null) {
      // velocity += Vector2(-acc!.x, acc!.y) * dt * 0.1;
-       position.x = acc!.z;
+       position.x = acc!.z*1000;
       // print x acc and velocity on same line
       // print('${acc!.x.toStringAsFixed(2)} ${velocity.x.toStringAsFixed(4)}');
       // print(acc!.x);
@@ -104,7 +104,7 @@ class BubbleComponent extends RiveComponent
     if (lifeTime > 10.0) {
       gameRef.remove(this);
     }
-    float(dt);
+    //float(dt);
     super.update(dt);
     position += velocity * dt * 10000;
     velocity *= 0.99;
@@ -114,8 +114,8 @@ class BubbleComponent extends RiveComponent
     if (growing) {
       size.x += 2;
       size.y += 2;
-      position.x -= 1;
-      position.y -= 1;
+      //position.x -= 1;
+      //position.y -= 1;
       if (size.x > 150) {
         growing = false;
         //gameRef.remove(this);
