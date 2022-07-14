@@ -11,7 +11,7 @@ import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter/services.dart';
-import 'package:sensors/sensors.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 void main() {
   runApp(GameWidget(
@@ -71,7 +71,7 @@ class BubbleComponent extends RiveComponent
   double lifeTime = 0;
   double maxVelocity = 0;
   bool growing = true;
-  AccelerometerEvent? acc;
+  GyroscopeEvent? acc;
 
   @override
   Future<void>? onLoad() {
@@ -83,7 +83,7 @@ class BubbleComponent extends RiveComponent
       }
     });
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
-      accelerometerEvents.listen((AccelerometerEvent event) {
+      gyroscopeEvents.listen((GyroscopeEvent event) {
         acc = event;
       });
     return super.onLoad();
@@ -92,8 +92,8 @@ class BubbleComponent extends RiveComponent
   @override
   void update(double dt) {
     if (acc != null) {
-      velocity += Vector2(-acc!.x, acc!.y) * dt * 0.1;
-      // position.x = -acc!.x / dt;
+     // velocity += Vector2(-acc!.x, acc!.y) * dt * 0.1;
+       position.x = acc!.z;
       // print x acc and velocity on same line
       // print('${acc!.x.toStringAsFixed(2)} ${velocity.x.toStringAsFixed(4)}');
       // print(acc!.x);
