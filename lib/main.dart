@@ -93,7 +93,7 @@ class BubbleComponent extends RiveComponent
   void update(double dt) {
     if (acc != null) {
      // velocity += Vector2(-acc!.x, acc!.y) * dt * 0.1;
-       position.x = acc!.z*1000;
+       position.x += acc!.y;
       // print x acc and velocity on same line
       // print('${acc!.x.toStringAsFixed(2)} ${velocity.x.toStringAsFixed(4)}');
       // print(acc!.x);
