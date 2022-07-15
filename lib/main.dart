@@ -104,7 +104,7 @@ class BubbleComponent extends RiveComponent
     lean.y *= screenSize.y / 2;
     // position = screenSize / 2 + lean;
 
-    velocity += Vector2(-acc.x, acc.y) * dt;
+    velocity += Vector2(-acc.x, acc.y)/1000;
 
     lifeTime += dt;
     if (lifeTime > 10.0) {
