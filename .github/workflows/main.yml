@@ -47,7 +47,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+        path: build/app/outputs/flutter-apk/app-debug.apk
         
   release:
     name: Release APK

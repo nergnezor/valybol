@@ -6,12 +6,13 @@ import 'package:flutter/material.dart' hide Draggable;
 import 'package:flame/game.dart';
 import 'package:flame_rive/flame_rive.dart';
 import 'package:flutter/services.dart';
+import 'package:motion_sensors/motion_sensors.dart';
 import 'package:rive/rive.dart';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter/services.dart';
-import 'package:sensors_plus/sensors_plus.dart';
+// import 'package:sensors_plus/sensors_plus.dart';
 
 void main() {
   runApp(GameWidget(
@@ -71,8 +72,10 @@ class BubbleComponent extends RiveComponent
   double lifeTime = 0;
   double maxVelocity = 0;
   bool growing = true;
-  AccelerometerEvent? acc;
-  GyroscopeEvent? gyro;
+  // AccelerometerEvent? acc;
+  // GyroscopeEvent? gyro;
+  Vector3 acc = Vector3.zero();
+  Vector3 gyro = Vector3.zero();
   @override
   Future<void>? onLoad() {
     controller = OneShotAnimation('Idle', autoplay: true);
@@ -82,27 +85,27 @@ class BubbleComponent extends RiveComponent
         fill = child as Fill;
       }
     });
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
-      accelerometerEvents.listen((AccelerometerEvent event) {
-        acc = event;
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+      motionSensors.accelerometerUpdateInterval = 5000;
+      motionSensors.accelerometer.listen((AccelerometerEvent event) {
+        acc.setValues(event.x, event.y, event.z);
       });
-       gyroscopeEvents.listen((GyroscopeEvent event) {
-        gyro = event;
+      motionSensors.gyroscope.listen((GyroscopeEvent event) {
+        gyro.setValues(event.x, event.y, event.z);
       });
+    }
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
-    if (acc != null) {
-      velocity += Vector2(-acc!.x, acc!.y);
-       position.x += gyro!.y*10;
-      // print x acc and velocity on same line
-      // print('${acc!.x.toStringAsFixed(2)} ${velocity.x.toStringAsFixed(4)}');
-      // print(acc!.x);
+    var lean = Vector2(-acc.x, acc.y) / 9.8;
+    lean.x *= screenSize.x / 2;
+    lean.y *= screenSize.y / 2;
+    position = screenSize / 2 + lean;
 
-      // print(velocity.x);
-    }
+    // velocity.x += gyro!.y / 10;
+
     lifeTime += dt;
     if (lifeTime > 10.0) {
       gameRef.remove(this);
@@ -124,8 +127,8 @@ class BubbleComponent extends RiveComponent
         //gameRef.remove(this);
       }
     }
-    edgeBounce();
-    // position.clamp(Vector2.zero(), screenSize - size);
+    // edgeBounce();
+    position.clamp(Vector2.zero(), screenSize - size);
   }
 
   void edgeBounce() {
