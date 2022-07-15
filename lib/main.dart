@@ -106,6 +106,7 @@ class BubbleComponent extends RiveComponent
     position.x= (pos.x + 15*position.x)/16;
    position.y= (pos.y + 15*position.y)/16;
  velocity.x += gyro.y/100;
+    velocity.y += gyro.x/100;
 
     lifeTime += dt;
     if (lifeTime > 10.0) {
@@ -128,8 +129,8 @@ class BubbleComponent extends RiveComponent
         //gameRef.remove(this);
       }
     }
-    // edgeBounce();
-    position.clamp(Vector2.zero(), screenSize - size);
+     edgeBounce();
+    //position.clamp(Vector2.zero(), screenSize - size);
   }
 
   void edgeBounce() {
