@@ -71,8 +71,8 @@ class BubbleComponent extends RiveComponent
   double lifeTime = 0;
   double maxVelocity = 0;
   bool growing = true;
-  GyroscopeEvent? acc;
-
+  AccelerometerEvent? acc;
+  GyroscopeEvent? gyro;
   @override
   Future<void>? onLoad() {
     controller = OneShotAnimation('Idle', autoplay: true);
@@ -83,8 +83,11 @@ class BubbleComponent extends RiveComponent
       }
     });
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
-      gyroscopeEvents.listen((GyroscopeEvent event) {
+      accelerometerEvents.listen((AccelerometerEvent event) {
         acc = event;
+      });
+       gyroscopeEvents.listen((GyroscopeEvent event) {
+        gyro = event;
       });
     return super.onLoad();
   }
@@ -92,8 +95,8 @@ class BubbleComponent extends RiveComponent
   @override
   void update(double dt) {
     if (acc != null) {
-     // velocity += Vector2(-acc!.x, acc!.y) * dt * 0.1;
-       position.x = acc!.y*10;
+      velocity += Vector2(-acc!.x, acc!.y);
+       position.x += gyro!.y*10;
       // print x acc and velocity on same line
       // print('${acc!.x.toStringAsFixed(2)} ${velocity.x.toStringAsFixed(4)}');
       // print(acc!.x);
