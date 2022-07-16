@@ -32,7 +32,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   static double frameRate = 60;
 
   @override
-  Color backgroundColor() => const Color(0xff171717);
+  Color backgroundColor() => const Color(0xff471717);
 
   @override
   Future<void> onLoad() async {
@@ -90,6 +90,7 @@ class BubbleComponent extends RiveComponent
       motionSensors.accelerometer.listen((AccelerometerEvent event) {
         acc.setValues(event.x, event.y, event.z);
       });
+      motionSensors.gyroscopeUpdateInterval =5000;
       motionSensors.gyroscope.listen((GyroscopeEvent event) {
         gyro.setValues(event.x, event.y, event.z);
       });
@@ -104,7 +105,7 @@ class BubbleComponent extends RiveComponent
     lean.y *= screenSize.y / 2;
     var pos = screenSize / 2 + lean;
     position.x= (pos.x + 7*position.x)/8;
-   position.y= (pos.y + 7*position.y)/8;
+   //position.y= (pos.y + 7*position.y)/8;
  velocity.x += gyro.y/100;
     velocity.y += gyro.x/100;
 
