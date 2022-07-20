@@ -90,7 +90,7 @@ class BubbleComponent extends RiveComponent
       motionSensors.accelerometer.listen((AccelerometerEvent event) {
         acc.setValues(event.x, event.y, event.z);
       });
-      motionSensors.gyroscopeUpdateInterval =5000;
+      motionSensors.gyroscopeUpdateInterval = 5000;
       motionSensors.gyroscope.listen((GyroscopeEvent event) {
         gyro.setValues(event.x, event.y, event.z);
       });
@@ -102,12 +102,12 @@ class BubbleComponent extends RiveComponent
   void update(double dt) {
     var lean = Vector2(-acc.x, acc.y) / 9.8;
     lean.x *= screenSize.x / 2;
-    lean.y *= screenSize.y / 2;
+    //lean.y *= screenSize.y / 2;
     var pos = screenSize / 2 + lean;
-    position.x= (pos.x + 7*position.x)/8;
-   //position.y= (pos.y + 7*position.y)/8;
- velocity.x += gyro.y/100;
-    velocity.y += gyro.x/100;
+    position.x = (pos.x + 7 * position.x) / 8;
+    //position.y= (pos.y + 7*position.y)/8;
+    velocity.x += gyro.y / 100;
+    velocity.y += gyro.x / 100;
 
     lifeTime += dt;
     if (lifeTime > 10.0) {
@@ -118,7 +118,9 @@ class BubbleComponent extends RiveComponent
     position += velocity * dt * 10000;
     velocity *= 0.99;
     position.y += dt * 10;
-    size.x = 100 - position.y / 1000;
+    size.x = 100 - velocity.y;
+    if (size.x < 10) size.x = 10;
+
     size.y = size.x;
     if (growing) {
       size.x += 2;
@@ -130,7 +132,7 @@ class BubbleComponent extends RiveComponent
         //gameRef.remove(this);
       }
     }
-     edgeBounce();
+    edgeBounce();
     //position.clamp(Vector2.zero(), screenSize - size);
   }
 
