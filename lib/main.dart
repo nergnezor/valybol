@@ -107,7 +107,7 @@ class BubbleComponent extends RiveComponent
     position.x = (pos.x + 7 * position.x) / 8;
     //position.y= (pos.y + 7*position.y)/8;
     velocity.x += gyro.y / 100;
-    velocity.y += gyro.x / 100;
+    position.y = gyro.x * 10;
 
     lifeTime += dt;
     if (lifeTime > 10.0) {
@@ -117,7 +117,7 @@ class BubbleComponent extends RiveComponent
     super.update(dt);
     position += velocity * dt * 10000;
     velocity *= 0.99;
-    position.y += dt * 10;
+    //position.y += dt * 10;
     size.x = 100 - velocity.y;
     if (size.x < 10) size.x = 10;
 
