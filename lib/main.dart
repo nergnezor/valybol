@@ -100,15 +100,21 @@ class BubbleComponent extends RiveComponent
 
   @override
   void update(double dt) {
+    if (gyro.x <0)
+    velocity.y -= gyro.x;
+    size.x = 100 - velocity.y;
+    if (size.x < 10) size.x = 10;
+
+    size.y = size.x;
     var lean = Vector2(-acc.x, acc.y) / 9.8;
     lean.x *= screenSize.x / 2;
     lean.y *= screenSize.y / 2;
     var pos = screenSize / 2 + lean;
     position.x = (pos.x + 7 * position.x) / 8;
-    position.y = 700;
+    position.y = 200;
     //(pos.y + 7 * position.y) / 8;
     velocity.x += gyro.y / 100;
-    velocity.y = -gyro.x * 100;
+    
 
     lifeTime += dt;
     if (lifeTime > 10.0) {
@@ -119,10 +125,8 @@ class BubbleComponent extends RiveComponent
     //position += velocity * dt * 10000;
     velocity *= 0.99;
     //position.y += dt * 10;
-    size.x = 100 - velocity.y;
-    if (size.x < 10) size.x = 10;
-
-    size.y = size.x;
+    
+    
     if (growing) {
       size.x += 2;
       size.y += 2;
