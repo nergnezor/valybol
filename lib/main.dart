@@ -100,10 +100,10 @@ class BubbleComponent extends RiveComponent
 
   @override
   void update(double dt) {
-    if (gyro.x <0)
-    velocity.y -= gyro.x;
-    size.x = 100 - velocity.y;
-    if (size.x < 10) size.x = 10;
+    if (gyro.x >0)
+    velocity.y += gyro.x;
+    size.x = 100 + velocity.y;
+    //if (size.x < 10) size.x = 10;
 
     size.y = size.x;
     var lean = Vector2(-acc.x, acc.y) / 9.8;
