@@ -110,7 +110,7 @@ class BubbleComponent extends RiveComponent
     //lean.x *= screenSize.x / 2;
     //lean.y *= screenSize.y / 2;
     position = screenSize / 2 - size/2;
-    position.x += (-acc.x/9.8)*screenSize.x / 4;//(lean.x + 7 * position.x) / 8;
+    position.x += (-acc.x/9.8)*screenSize.x / 6;//(lean.x + 7 * position.x) / 8;
     //position.y = 200;
     //(pos.y + 7 * position.y) / 8;
     velocity.x += gyro.y;
@@ -122,7 +122,7 @@ class BubbleComponent extends RiveComponent
     }
     //float(dt);
     super.update(dt);
-    position.x += velocity.x /dt;
+    position.x += velocity.x;
     velocity *= 0.95;
     //position.y += dt * 10;
     
