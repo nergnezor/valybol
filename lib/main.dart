@@ -106,7 +106,7 @@ class BubbleComponent extends RiveComponent
     velocity.z += gyro.x;
     position.y -= velocity.z;
     final dy=(position.y -screenSize.y / 2);
-    size.x = 10 + (dy*dy)/1000;
+    size.x = 100 + (dy*dy)/1000;
     size.y = size.x;
     var lean = Vector2(-acc.x, acc.y) / 9.8;
     lean.x *= screenSize.x / 2;
