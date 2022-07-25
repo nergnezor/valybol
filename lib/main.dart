@@ -67,7 +67,7 @@ class BubbleComponent extends RiveComponent
 
   late OneShotAnimation controller;
   late Fill fill;
-  Vector2 velocity = Vector2.zero();
+  Vector3 velocity = Vector3.zero();
   static late Vector2 screenSize;
   double lifeTime = 0;
   double maxVelocity = 0;
@@ -100,21 +100,24 @@ class BubbleComponent extends RiveComponent
 
   @override
   void update(double dt) {
-    if (gyro.x >0)
-    velocity.y += gyro.x;
-    size.x = 100 + velocity.y*5;
+    
     //if (size.x < 10) size.x = 10;
 
     size.y = size.x;
-    //var lean = Vector2(-acc.x, acc.y) / 9.8;
-    //lean.x *= screenSize.x / 2;
-    //lean.y *= screenSize.y / 2;
-    position = screenSize / 2 - size/2;
-    position.x += (-acc.x/9.8)*screenSize.x / 6;//(lean.x + 7 * position.x) / 8;
-    //position.y = 200;
-    //(pos.y + 7 * position.y) / 8;
+    var lean = Vector2(-acc.x, acc.y) / 9.8;
+    lean.x *= screenSize.x / 4;
+    lean.y *= screenSize.y / 4;
+    //var pos = screenSize / 2 - size/2;
+    //pos.x += -acc.x;//(lean.x + 7 * position.x) / 8;
+    position.x=(pos.x + 7 * position.x) / 8;
+    position.y=(pos.y + 7 * position.y) / 8;
     velocity.x += gyro.y;
+    position.x+=velocity.x;
     
+    if (gyro.x >0)
+    velocity.z += gyro.x;
+    position.y -= velocity.z;
+    size.x = 100 + position.y*5;
 
     lifeTime += dt;
     if (lifeTime > 10.0) {
@@ -122,7 +125,7 @@ class BubbleComponent extends RiveComponent
     }
     //float(dt);
     super.update(dt);
-    position.x += velocity.x;
+    
     velocity *= 0.95;
     //position.y += dt * 10;
     
@@ -137,7 +140,7 @@ class BubbleComponent extends RiveComponent
         //gameRef.remove(this);
       }
     }
-    edgeBounce();
+    //edgeBounce();
     //position.clamp(Vector2.zero(), screenSize - size);
   }
 
