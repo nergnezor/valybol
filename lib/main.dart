@@ -108,16 +108,16 @@ class BubbleComponent extends RiveComponent
     final dy=(position.y -screenSize.y / 2);
     size.x = 100 + (dy*dy)/1000;
     size.y = size.x;
+    final sizeFactor = size.x/100;
     var lean = Vector2(-acc.x, acc.y) / 9.8;
-    lean.x *= screenSize.x / 4;
-    lean.y *= screenSize.y / 4;
-    var pos = screenSize / 2 - size/2;
-    pos+=lean;
+    lean.x *= screenSize.x / sizeFactor;
+    lean.y *= screenSize.y / 20;
+    var pos = lean + screenSize / 2 - size/2;
     //pos.x += -acc.x;//(lean.x + 7 * position.x) / 8;
-    position.x=(pos.x + 15 * position.x) / 16;
-    position.y=(pos.y + 15 * position.y) / 16;
-    position.x/=(size.x/100);
-    velocity.x += gyro.y;
+    position.x=(pos.x + 7 * position.x) / 8;
+    position.y=(pos.y + 0 * position.y) / 1;
+    
+    velocity.x += gyro.y/sizeFactor;
     position.x+=velocity.x;
     
     
