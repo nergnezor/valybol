@@ -62,6 +62,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   void render(Canvas canvas) {
     
     _drawVerticalLines(canvas);
+    super.render(canvas);
     
   }
 void _drawVerticalLines(Canvas c) {
