@@ -68,8 +68,11 @@ void _drawVerticalLines(Canvas c) {
   Offset start = Offset.zero;
   Offset end = Offset(200,200);
 final int cellSize=50;
+final paint = Paint()
+    ..color = Colors.green
+    ..strokeWidth = 4;
     for (double x = start.dx; x <= end.dx; x += cellSize) {
-      c.drawLine(Offset(x, start.dy), Offset(x, end.dy), Styles.blue);
+      c.drawLine(Offset(x, start.dy), Offset(x, end.dy), paint);
     }
   }
 }
