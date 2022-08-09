@@ -30,7 +30,7 @@ void main() {
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
   static double frameRate = 60;
-  var y=0;
+  double y=0;
 
   @override
   Color backgroundColor() => const Color(0xff471717);
