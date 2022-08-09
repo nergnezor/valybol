@@ -30,6 +30,7 @@ void main() {
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
   static double frameRate = 60;
+  var y=0;
 
   @override
   Color backgroundColor() => const Color(0xff471717);
@@ -57,6 +58,14 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     }
     createBubble(info.eventPosition.game.x, info.eventPosition.game.y);
   }
+   @override
+  void update(double dt) {
+    y +=1;
+    if (y>size.y){
+      y=0;
+    }
+    super.update(dt);
+  }
   
   @override
   void render(Canvas canvas) {
@@ -67,7 +76,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
 void _drawVerticalLines(Canvas c) {
   Offset start = Offset.zero;
-  Offset end = Offset(200,200);
+  Offset end = Offset(200,y);
 final int cellSize=50;
 final paint = Paint()
     ..color = Colors.green
