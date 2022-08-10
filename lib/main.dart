@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Draggable;
@@ -30,7 +31,8 @@ void main() {
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
   static double frameRate = 60;
-  double y=0;
+  double y = 0;
+  double x = 0;
 
   @override
   Color backgroundColor() => const Color(0xff471717);
@@ -52,38 +54,84 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void onDragStart(int i, DragStartInfo info) {
     super.onDragStart(i, info);
-    print('handled 2?' + info.handled.toString());
+    print('handled 2?' + info.toString());
     if (info.handled) {
       return;
     }
     createBubble(info.eventPosition.game.x, info.eventPosition.game.y);
   }
-   @override
+
+  @override
+  void onDragUpdate(int i, DragUpdateInfo info) {
+    super.onDragUpdate(i, info);
+
+    x += info.delta.game.x; // != 0 || info.delta.game.y != 0) {
+    y += info.delta.game.y;
+    info.handled = true;
+  }
+
+  @override
   void update(double dt) {
-    y +=1;
-    if (y>size.y){
-      y=0;
-    }
+    // y += 1;
+    // if (y > size.y) {
+    //   y = 0;
+    // }
     super.update(dt);
   }
-  
+
   @override
   void render(Canvas canvas) {
-    
     _drawVerticalLines(canvas);
     super.render(canvas);
-    
   }
-void _drawVerticalLines(Canvas c) {
-  Offset start = Offset.zero;
-  Offset end = Offset(200,y);
-final int cellSize=50;
-final paint = Paint()
-    ..color = Colors.green
-    ..strokeWidth = 4;
+
+  void _drawVerticalLines(Canvas c) {
+    Offset start = Offset(x, y);
+    Offset end = Offset(x + 200, y + 200);
+    final int cellSize = 50;
+    final paint = Paint()
+      ..color = Colors.green
+      // ..strokeWidth = 4
+      ..style = PaintingStyle.fill;
     for (double x = start.dx; x <= end.dx; x += cellSize) {
       c.drawLine(Offset(x, start.dy), Offset(x, end.dy), paint);
     }
+    Rect rect = Rect.fromPoints(start, end);
+    c.drawPath(Path()..addRect(rect), Paint()..color = Colors.red);
+    c.drawPath(
+        Path()
+          ..addPolygon(
+              [Offset(0, 0), rect.topLeft, rect.topRight, Offset(size.x, 0)],
+              true),
+        Paint()..color = Colors.blue);
+    c.drawPath(
+        Path()
+          ..addPolygon([
+            Offset(0, size.y),
+            rect.bottomLeft,
+            rect.bottomRight,
+            size.toOffset(),
+          ], true),
+        Paint()..color = Colors.yellow);
+
+    c.drawPath(
+        Path()
+          ..addPolygon(
+              [Offset(0, 0), rect.topLeft, rect.bottomLeft, Offset(0, size.y)],
+              true),
+        Paint()..color = Colors.orangeAccent);
+    c.drawPath(
+        Path()
+          ..addPolygon([
+            Offset(size.x, 0),
+            rect.topRight,
+            rect.bottomRight,
+            size.toOffset(),
+          ], true),
+        Paint()..color = Colors.teal);
+
+    paint.color = Color.fromARGB(30, 0, 0, 0);
+    c.drawCircle(start, 100, paint);
   }
 }
 
@@ -128,27 +176,23 @@ class BubbleComponent extends RiveComponent
 
   @override
   void update(double dt) {
-    
     //if (size.x < 10) size.x = 10;
-    if (gyro.x >0)
-    velocity.z += gyro.x;
+    if (gyro.x > 0) velocity.z += gyro.x;
     position.y -= velocity.z;
-    final dy=(position.y -screenSize.y / 2);
-    size.x = 100 + (dy*dy)/1000;
+    final dy = (position.y - screenSize.y / 2);
+    size.x = 100 + (dy * dy) / 1000;
     size.y = size.x;
-    final sizeFactor = size.x/100;
+    final sizeFactor = size.x / 100;
     var lean = Vector2(-acc.x, acc.y) / 9.8;
     lean.x *= screenSize.x / sizeFactor;
     lean.y *= screenSize.y / 20;
-    var pos = lean + screenSize / 2 - size/2;
+    var pos = lean + screenSize / 2 - size / 2;
     //pos.x += -acc.x;//(lean.x + 7 * position.x) / 8;
-    position.x=(pos.x + 7 * position.x) / 8;
-   position.y=(pos.y + 9 * position.y) / 10;
-    
-    velocity.x += gyro.y/sizeFactor;
-    position.x+=velocity.x;
-    
-    
+    position.x = (pos.x + 7 * position.x) / 8;
+    position.y = (pos.y + 9 * position.y) / 10;
+
+    velocity.x += gyro.y / sizeFactor;
+    position.x += velocity.x;
 
     lifeTime += dt;
     if (lifeTime > 10.0) {
@@ -156,11 +200,10 @@ class BubbleComponent extends RiveComponent
     }
     //float(dt);
     super.update(dt);
-    
+
     velocity *= 0.95;
     //position.y += dt * 10;
-    
-    
+
     if (growing) {
       size.x += 2;
       size.y += 2;
