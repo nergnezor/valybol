@@ -27,7 +27,7 @@ void main() {
 }
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
-  late Shape ball;
+   Shape ball=null;
   static double frameRate = 60;
   double y = 0;
   double x = 0;
@@ -77,17 +77,18 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   void onDragUpdate(int i, DragUpdateInfo info) {
     super.onDragUpdate(i, info);
 
-    ball.x += info.delta.game.x; // != 0 || info.delta.game.y != 0) {
-    ball.y += info.delta.game.y;
-    info.handled = true;
+    ball?.x += info.delta.game.x; // != 0 || info.delta.game.y != 0) {
+    ball?.y += info.delta.game.y;
+    //info.handled = true;
   }
 
   @override
   void update(double dt) {
+    if (ball!=null){
     ball.y += 1/dt;
      if (ball.y > size.y) {
        ball.y = 0;
-     }
+     }}
     super.update(dt);
   }
 }
