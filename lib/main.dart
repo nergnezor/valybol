@@ -84,10 +84,10 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
   @override
   void update(double dt) {
-    // y += 1;
-    // if (y > size.y) {
-    //   y = 0;
-    // }
+    ball.y += 1/dt;
+     if (ball.y > size.y) {
+       ball.y = 0;
+     }
     super.update(dt);
   }
 }
