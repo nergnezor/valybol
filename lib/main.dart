@@ -44,7 +44,10 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   Future<void> createBubble(double xPosition, double yPosition) async {
     Artboard artboard = await loadArtboard(RiveFile.asset('assets/beach.riv'));
     BubbleComponent component = BubbleComponent(artboard: artboard);
-    component.position = Vector2(xPosition - 200, yPosition - 500);
+    var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
+    ;
+
+    component.position = -diff / 2;
     add(component);
     artboard.forEachComponent((child) {
       if (child.name == 'ball') {
@@ -62,8 +65,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     // if (info.handled) {
     //   return;
     // }
-    ball.x = info.eventPosition.global.x;
-    ball.y = info.eventPosition.global.y;
+    // ball.x = info.eventPosition.global.x;
+    // ball.y = info.eventPosition.global.y;
 
     // createBubble(info.eventPosition.game.x, info.eventPosition.game.y);
   }
@@ -72,8 +75,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   void onDragUpdate(int i, DragUpdateInfo info) {
     super.onDragUpdate(i, info);
 
-    x += info.delta.game.x; // != 0 || info.delta.game.y != 0) {
-    y += info.delta.game.y;
+    ball.x += info.delta.game.x; // != 0 || info.delta.game.y != 0) {
+    ball.y += info.delta.game.y;
     info.handled = true;
   }
 
@@ -91,7 +94,8 @@ class BubbleComponent extends RiveComponent
     with HasGameRef, Tappable, Draggable {
   final Artboard artboard;
   BubbleComponent({required this.artboard})
-      : super(artboard: artboard, size: Vector2.all(1500));
+      : super(
+            artboard: artboard, size: Vector2(artboard.width, artboard.height));
 
   late OneShotAnimation controller;
   late Fill fill;
