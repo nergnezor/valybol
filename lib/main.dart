@@ -37,6 +37,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   Future<void> onLoad() async {
     // BubbleComponent.screenSize = size;
+    print('Load Rive artboard...');
     createBubble(0, 0);
     await super.onLoad();
   }
