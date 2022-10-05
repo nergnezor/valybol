@@ -12,6 +12,7 @@ import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 void main() {
+  print('start main');
   runApp(GameWidget(
     game: MyGame(),
   ));
