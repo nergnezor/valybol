@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "bubblor",
+            "name": "valybol",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "bubblor (profile mode)",
+            "name": "valybol (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "bubblor (release mode)",
+            "name": "valybol (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
