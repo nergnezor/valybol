@@ -113,12 +113,12 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
           ball!.worldTranslation.values[0], ball!.worldTranslation.values[1]);
       Vector2 tailPos = Vector2(outerTail!.worldTranslation.values[0],
           outerTail!.worldTranslation.values[1]);
-      final d = ballPos - tailPos;
+      final d = ballPos - tailPos-100;
 
       final dist = sqrt(d.x * d.x + d.y * d.y);
       if (d.y > 0) {
         ball!.y -= d.y;
-        // ballVelocity.y -= 1;
+        ballVelocity.y -= 0.1;
       }
       // if (dist < 40) {
       //   ballIsFalling = false;
