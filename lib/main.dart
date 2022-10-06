@@ -123,31 +123,33 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
       final d = ballPos - tailPos;
 
       final dist = sqrt(d.x * d.x + d.y * d.y);
-      if (tailPrevious != null) {
+      if (tailPrevious != null && tailPrevious != Vector2.zero()) {
         final tailMovement = tailPos - tailPrevious!;
 
         if (ballPos.y + ballRadius! > tailPos.y) {
           // ball!.y += d.y;
           ball!.worldTranslation.values[1] =
-              outerTail!.worldTranslation.values[1] + ballRadius!;
+              outerTail!.worldTranslation.values[1] - ballRadius!;
           // if (d.y < ballVelocity.y) {
           if (ballVelocity.y > 0) {
             ballVelocity.y = 0;
           }
           ballVelocity.y = min(0, ballVelocity.y);
           ballVelocity += tailMovement * dt * 10;
-          print('tap');
+          // print('tap');
           // }
         }
         // if (dist < 40) {
         //   ballIsFalling = false;
         // }
         else {
-          ballVelocity.y += 0.1;
+          ballVelocity.y += 0.2;
 
           ballIsFalling = true;
           // ball!.y += 0.1;
         }
+        ball!.x += ballVelocity.x;
+        ballVelocity.x *= 0.98;
         ball!.y += ballVelocity.y;
       }
       tailPrevious = tailPos;
@@ -169,12 +171,12 @@ class CustomRiveComponent extends RiveComponent
   Vector3 velocity = Vector3.zero();
   // static late Vector2 screenSize;
 
-  @override
-  Future<void>? onLoad() {
-    controller = OneShotAnimation('demo', autoplay: false);
-    // var e = controller.onStop!();
-    artboard.addController(controller);
+  // @override
+  // Future<void>? onLoad() {
+  //   controller = OneShotAnimation('demo', autoplay: false);
+  //   // var e = controller.onStop!();
+  //   artboard.addController(controller);
 
-    return super.onLoad();
-  }
+  //   return super.onLoad();
+  // }
 }
