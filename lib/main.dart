@@ -129,8 +129,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         ballIsFalling = true;
         ball!.y += 0.1;
       }
+      ball!.y += ballVelocity.y;
     }
-    ball!.y += ballVelocity.y;
 
     super.update(dt);
   }
