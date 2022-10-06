@@ -118,7 +118,9 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
       final dist = sqrt(d.x * d.x + d.y * d.y);
       if (d.y > -100) {
         ball!.y -= d.y;
-        ballVelocity.y -= 0.1;
+       if (d.y < ballVelocity.y){
+        ballVelocity.y=d.y;
+        }
       }
       // if (dist < 40) {
       //   ballIsFalling = false;
