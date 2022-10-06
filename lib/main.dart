@@ -13,6 +13,7 @@ import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 // import 'package:rive/src/rive_core/bones/bone.dart';
 import 'package:rive/src/rive_core/shapes/rectangle.dart';
+import 'package:rive/src/rive_core/shapes/ellipse.dart';
 import 'package:rive/src/rive_core/node.dart';
 import 'package:rive/src/rive_core/math/vec2d.dart';
 
@@ -36,10 +37,12 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   Vector2? court;
   Node? outerTail;
   Shape? ball;
+  double? ballRadius;
   static double frameRate = 60;
   double y = 0;
   double x = 0;
   Vector2 ballVelocity = Vector2(0, 0);
+  Vector2? tailPrevious;
   @override
   Color backgroundColor() => const Color(0xff471717);
   bool ballIsFalling = true; //
@@ -76,8 +79,12 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
           outerTail = child as Node;
           print(child.name);
           break;
-        case 'Ball':
+        case 'ball':
           ball = child as Shape;
+          print(child.name);
+          break;
+        case 'ball ellipse':
+          ballRadius = (child as Ellipse).radiusX;
           print(child.name);
           break;
       }
@@ -116,24 +123,35 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
       final d = ballPos - tailPos;
 
       final dist = sqrt(d.x * d.x + d.y * d.y);
-      if (d.y > -100) {
-        ball!.y -= d.y;
-       if (d.y < ballVelocity.y){
-        ballVelocity.y=d.y;
+      if (tailPrevious != null) {
+        final tailMovement = tailPos - tailPrevious!;
+
+        if (ballPos.y + ballRadius! > tailPos.y) {
+          // ball!.y += d.y;
+          ball!.worldTranslation.values[1] =
+              outerTail!.worldTranslation.values[1] + ballRadius!;
+          // if (d.y < ballVelocity.y) {
+          if (ballVelocity.y > 0) {
+            ballVelocity.y = 0;
+          }
+          ballVelocity.y = min(0, ballVelocity.y);
+          ballVelocity += tailMovement * dt * 10;
+          print('tap');
+          // }
         }
-      }
-      // if (dist < 40) {
-      //   ballIsFalling = false;
-      // }
-      else {
-        ballVelocity.y = 0.1;
+        // if (dist < 40) {
+        //   ballIsFalling = false;
+        // }
+        else {
+          ballVelocity.y += 0.1;
 
-        ballIsFalling = true;
-        ball!.y += 0.1;
+          ballIsFalling = true;
+          // ball!.y += 0.1;
+        }
+        ball!.y += ballVelocity.y;
       }
-      ball!.y += ballVelocity.y;
+      tailPrevious = tailPos;
     }
-
     super.update(dt);
   }
 }
