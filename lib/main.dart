@@ -34,9 +34,15 @@ void main() {
   }
 }
 
+class Player {
+  late Shape target;
+  late Node tail;
+  Vector2 tailPrevious = Vector2.zero();
+}
+
 class MyGame extends FlameGame with HasTappables, HasDraggables {
-  List<Shape> targets = <Shape>[];
-  List<Node> tails = <Node>[];
+  List<Player> players = <Player>[];
+  // Player player = Player();
   Rect? constraint;
   Vector2? court;
   Shape? ball;
@@ -46,7 +52,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   double x = 0;
   Vector2 ballVelocity = Vector2(0, 0);
   Vector2 ballSpawn = Vector2(150, -200);
-  List<Vector2> tailPrevious = <Vector2>[];
+  bool isCharging = false;
   int activeIndex = 0;
   @override
   Color backgroundColor() => const Color(0xff471717);
@@ -67,28 +73,39 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
     component.position = -diff / 2;
     add(component);
+    int targetCount = 0;
+    int tailCount = 0;
     artboard.forEachComponent((child) {
       switch (child.name) {
         case 'target':
           // target = child as Shape;
           (child as Shape).opacity = 0;
-          targets.add(child as Shape);
+          if (players.length <= targetCount) {
+            players.add(Player());
+          }
+          players[targetCount].target = child;
+          ++targetCount;
+          // player.target = child as Shape;
           print(child.name);
           if (constraint == null) {
             final c = child.children.whereType<TranslationConstraint>().single;
             constraint =
                 Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
+            return;
           }
           break;
 
         case 'rectangle':
           court =
               Vector2((child as Rectangle).width, (child as Rectangle).height);
-          // var scale = size.x / court.;
           print(court!.toString());
           break;
         case 'tail':
-          tails.add(child as Node);
+          if (players.length <= tailCount) {
+            players.add(Player());
+          }
+          players[tailCount].tail = child as Node;
+          ++tailCount;
           print(child.name);
           break;
         case 'ball':
@@ -103,49 +120,52 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
           break;
         case 'val':
           var e = child;
-
-          // add(e as Component);
           print(child.name);
           break;
       }
     });
+  }
 
-    // CustomRiveComponent component2 = CustomRiveComponent(artboard: artboard);
-    // var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
+  @override
+  void onTapDown(int pointerId, TapDownInfo info) {
+    super.onTapDown(pointerId, info);
+    activeIndex =
+        (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
+    print('tap down: ' + pointerId.toString());
+  }
 
-    // component.position = -diff / 2;
-    // add(component);
+  @override
+  void onTapUp(int pointerId, TapUpInfo info) {
+    super.onTapUp(pointerId, info);
+    activeIndex =
+        (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
+    print('tap up: ' + pointerId.toString());
   }
 
   @override
   void onDragStart(int i, DragStartInfo info) {
     super.onDragStart(i, info);
-    // print('handled 2?' + info.toString());
-    // if (info.handled) {
-    //   return;
-    // }
-    // ball.x = info.eventPosition.global.x;
-    // ball.y = info.eventPosition.global.y;
-
-    // createBubble(info.eventPosition.game.x, info.eventPosition.game.y);
-    activeIndex =
-        (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
   }
 
   @override
   void onDragUpdate(int i, DragUpdateInfo info) {
     super.onDragUpdate(i, info);
-    // target?.x += info.delta.game.x; // != 0 || info.delta.game.y != 0) {
-    targets[activeIndex].y = targets[activeIndex].y +
-        info.delta.game.x * (activeIndex.isEven ? 1 : -1);
-    targets[activeIndex].x -= info.delta.game.y;
+    var player = players[activeIndex];
+    var target = player.target;
+    final tailY = player.tail.worldTranslation.values[1];
+    final dy = info.delta.game.x * (activeIndex.isEven ? 1 : -1);
+    target.y = target.y + dy;
+    target.x -= info.delta.game.y;
     if (constraint == null) {
       return;
     }
-    print(targets[activeIndex].y);
-    targets[activeIndex].y.clamp(tails[activeIndex].y + constraint!.top,
-        tails[activeIndex].y + constraint!.bottom);
-    //info.handled = true;
+    print(target.worldTranslation);
+    if (target.worldTranslation.values[1] < tailY + constraint!.top ||
+        target.worldTranslation.values[1] > tailY + constraint!.bottom) {
+      print(tailY);
+
+      // target.y -= 1 * dy;
+    }
   }
 
   @override
@@ -157,15 +177,11 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     ballIsFalling = true;
     Vector2 ballPos = Vector2(
         ball!.worldTranslation.values[0], ball!.worldTranslation.values[1]);
-    for (var tail in tails) {
+    for (var p in players) {
       Vector2 tailPos = Vector2(
-          tail.worldTranslation.values[0], tail.worldTranslation.values[1]);
-      if (tailPrevious.length <= i) {
-        tailPrevious.add(tailPos);
-        continue;
-      }
-      if (tailPos == Vector2.zero()) {
-        tailPrevious[i] = tailPos;
+          p.tail.worldTranslation.values[0], p.tail.worldTranslation.values[1]);
+      if (p.tailPrevious == null || p.tailPrevious == Vector2.zero()) {
+        p.tailPrevious = tailPos;
         continue;
       }
 
@@ -175,11 +191,11 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         continue;
       }
 
-      final tailMovement = tailPos - tailPrevious[i];
+      final tailMovement = tailPos - p.tailPrevious;
 
       if (ballPos.y + ballRadius! > tailPos.y) {
         ball!.worldTranslation.values[1] =
-            tail.worldTranslation.values[1] - ballRadius!;
+            p.tail.worldTranslation.values[1] - ballRadius!;
         if (ballVelocity.y > 0) {
           ballVelocity.y = 0;
         }
@@ -188,7 +204,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         ballIsFalling = false;
       }
 
-      tailPrevious[i] = tailPos;
+      p.tailPrevious = tailPos;
       i += 1;
     }
     ballVelocity.x *= 0.98;
@@ -221,14 +237,4 @@ class CustomRiveComponent extends RiveComponent
   late OneShotAnimation controller;
   late Fill fill;
   Vector3 velocity = Vector3.zero();
-  // static late Vector2 screenSize;
-
-  // @override
-  // Future<void>? onLoad() {
-  //   controller = OneShotAnimation('demo', autoplay: false);
-  //   // var e = controller.onStop!();
-  //   artboard.addController(controller);
-
-  //   return super.onLoad();
-  // }
 }
