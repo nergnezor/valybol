@@ -41,6 +41,7 @@ class Player {
   int charge = 0;
   bool isCharging = false;
   double angle = 0;
+  Vector2 targetSpawn = Vector2.zero();
 }
 
 class MyGame extends FlameGame with HasTappables, HasDraggables {
@@ -55,6 +56,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   double x = 0;
   Vector2 ballVelocity = Vector2(0, 0);
   Vector2 ballSpawn = Vector2(150, -200);
+  Vector2 targetSpawn = Vector2(-300, -200);
   int activeIndex = 0;
   @override
   Color backgroundColor() => const Color(0xff471717);
@@ -85,8 +87,10 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
             players.add(Player());
           }
           players[targetCount].target = child as Shape;
+
           ++targetCount;
           print(child.name);
+
           if (constraint == null) {
             final c = child.children.whereType<TranslationConstraint>().single;
             constraint =
@@ -166,7 +170,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     }
     final dx = info.delta.game.x * (activeIndex.isEven ? 1 : -1);
     player.angle += dx;
-    print(player.angle);
+    // print(player.angle);
     target.y = target.y + dx;
   }
 
@@ -182,10 +186,19 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     for (var p in players) {
       if (!p.isCharging && p.charge > 0) {
         final dCharge = min(10, p.charge);
-        ballVelocity.y -= dCharge / 10;
-        ballVelocity.x += p.angle * 0.01;
-        p.target.x += 10;
-        p.charge -= dCharge;
+        // p.charge -= dCharge;
+        // ballVelocity.y -= dCharge / 10;
+        // ballVelocity.x += p.angle * 0.01;
+        // p.target.x += 10;
+        // print()
+        final dTarget = p.targetSpawn -
+            Vector2(p.target.worldTranslation.values[0],
+                p.target.worldTranslation.values[1]);
+        // print(acos(dTarget.y / dTarget.x));
+        // p.target.x += acos(dTarget.y / dTarget.x);
+        p.target.x -= dCharge * dTarget.y / 200;
+        // p.target.y -= dCharge * dTarget.x / 100;
+        // ballVelocity
       }
       p.target.x = p.target.x.clamp(constraint!.left, constraint!.right);
       p.target.y = p.target.y.clamp(constraint!.top, constraint!.bottom);
@@ -201,7 +214,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
       if (dist > 50) {
         continue;
       }
-      ballVelocity.x -= d.x / d.x.abs() * dt;
+      ball!.x -= d.x / d.x.abs();
       final tailMovement = tailPos - p.tailPrevious;
 
       if (ballPos.y + ballRadius! > tailPos.y) {
@@ -217,6 +230,11 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
       p.tailPrevious = tailPos;
       i += 1;
+      final dTarget = p.targetSpawn -
+          Vector2(p.target.worldTranslation.values[0],
+              p.target.worldTranslation.values[1]);
+      // p.target.x -= dTarget.y / 10;
+      // p.target.y -= dTarget.x / 10;
     }
     ballVelocity.x *= 0.98;
     if (ballIsFalling) {
