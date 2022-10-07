@@ -85,6 +85,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
           break;
         case 'ball':
           ball = child as Shape;
+          ball!.y -= size.y / 2;
           print(child.name);
           break;
         case 'ball ellipse':
@@ -135,20 +136,25 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void update(double dt) {
     var i = 0;
-    tails.forEach((tail) {
-      Vector2 ballPos = Vector2(
-          ball!.worldTranslation.values[0], ball!.worldTranslation.values[1]);
+    ballIsFalling = true;
+    Vector2 ballPos = Vector2(
+        ball!.worldTranslation.values[0], ball!.worldTranslation.values[1]);
+    for (var tail in tails) {
       Vector2 tailPos = Vector2(
           tail.worldTranslation.values[0], tail.worldTranslation.values[1]);
-      final d = ballPos - tailPos;
-
-      final dist = sqrt(d.x * d.x + d.y * d.y);
       if (tailPrevious.length <= i) {
         tailPrevious.add(tailPos);
-        return;
+        continue;
       }
-      if (tailPos == Vector2.zero) {
-        return;
+      if (tailPos == Vector2.zero()) {
+        tailPrevious[i] = tailPos;
+        continue;
+      }
+
+      final d = ballPos - tailPos;
+      final dist = sqrt(d.x * d.x + d.y * d.y);
+      if (d.x.abs() > 50) {
+        continue;
       }
 
       final tailMovement = tailPos - tailPrevious[i];
@@ -161,17 +167,26 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         }
         ballVelocity.y = min(0, ballVelocity.y);
         ballVelocity += tailMovement * dt * 10;
-      } else {
-        ballVelocity.y += 0.4;
-        ballIsFalling = true;
+        ballIsFalling = false;
       }
-      ballVelocity.x *= 0.98;
-      // ball!.x += ballVelocity.x;
-      ball!.y += ballVelocity.y;
 
       tailPrevious[i] = tailPos;
       i += 1;
-    });
+    }
+    ballVelocity.x *= 0.98;
+    if (ballIsFalling) {
+      ballVelocity.y += 0.2;
+      if (ballPos.y >= size.y * 0.8) {
+        ballVelocity = Vector2.zero();
+        ball!.opacity -= 0.1;
+        if (ball!.opacity <= 0) {
+          ball!.opacity = 1;
+          ball!.y = 0;
+        }
+      }
+    }
+    ball!.x += ballVelocity.x;
+    ball!.y += ballVelocity.y;
     super.update(dt);
   }
 }
