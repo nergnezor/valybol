@@ -17,6 +17,7 @@ import 'package:rive/src/rive_core/shapes/rectangle.dart';
 import 'package:rive/src/rive_core/shapes/ellipse.dart';
 import 'package:rive/src/rive_core/node.dart';
 import 'package:rive/src/rive_core/math/vec2d.dart';
+import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
 
 void main() {
   print('start main');
@@ -36,6 +37,7 @@ void main() {
 class MyGame extends FlameGame with HasTappables, HasDraggables {
   List<Shape> targets = <Shape>[];
   List<Node> tails = <Node>[];
+  Rect? constraint;
   Vector2? court;
   Shape? ball;
   double? ballRadius;
@@ -43,6 +45,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   double y = 0;
   double x = 0;
   Vector2 ballVelocity = Vector2(0, 0);
+  Vector2 ballSpawn = Vector2(150, -200);
   List<Vector2> tailPrevious = <Vector2>[];
   int activeIndex = 0;
   @override
@@ -71,6 +74,11 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
           (child as Shape).opacity = 0;
           targets.add(child as Shape);
           print(child.name);
+          if (constraint == null) {
+            final c = child.children.whereType<TranslationConstraint>().single;
+            constraint =
+                Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
+          }
           break;
 
         case 'rectangle':
@@ -85,7 +93,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
           break;
         case 'ball':
           ball = child as Shape;
-          ball!.y -= size.y / 2;
+          ball!.x = ballSpawn.x;
+          ball!.y = ballSpawn.y;
           print(child.name);
           break;
         case 'ball ellipse':
@@ -125,16 +134,25 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
   @override
   void onDragUpdate(int i, DragUpdateInfo info) {
+    super.onDragUpdate(i, info);
     // target?.x += info.delta.game.x; // != 0 || info.delta.game.y != 0) {
     targets[activeIndex].y = targets[activeIndex].y +
         info.delta.game.x * (activeIndex.isEven ? 1 : -1);
     targets[activeIndex].x -= info.delta.game.y;
+    if (constraint == null) {
+      return;
+    }
+    print(targets[activeIndex].y);
+    targets[activeIndex].y.clamp(tails[activeIndex].y + constraint!.top,
+        tails[activeIndex].y + constraint!.bottom);
     //info.handled = true;
-    super.onDragUpdate(i, info);
   }
 
   @override
   void update(double dt) {
+    if (ball == null) {
+      return;
+    }
     var i = 0;
     ballIsFalling = true;
     Vector2 ballPos = Vector2(
@@ -178,10 +196,11 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
       ballVelocity.y += 0.2;
       if (ballPos.y >= size.y * 0.8) {
         ballVelocity = Vector2.zero();
-        ball!.opacity -= 0.1;
+        ball!.opacity -= 0.01;
         if (ball!.opacity <= 0) {
           ball!.opacity = 1;
-          ball!.y = 0;
+          ball!.x = ballSpawn.x;
+          ball!.y = ballSpawn.y;
         }
       }
     }
