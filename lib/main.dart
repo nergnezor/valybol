@@ -78,14 +78,12 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     artboard.forEachComponent((child) {
       switch (child.name) {
         case 'target':
-          // target = child as Shape;
-          (child as Shape).opacity = 0;
+          // (child as Shape).opacity = 0;
           if (players.length <= targetCount) {
             players.add(Player());
           }
-          players[targetCount].target = child;
+          players[targetCount].target = child as Shape;
           ++targetCount;
-          // player.target = child as Shape;
           print(child.name);
           if (constraint == null) {
             final c = child.children.whereType<TranslationConstraint>().single;
@@ -143,8 +141,9 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
 
   @override
-  void onDragStart(int i, DragStartInfo info) {
-    super.onDragStart(i, info);
+  void onDragEnd(int i, DragEndInfo info) {
+    super.onDragEnd(i, info);
+    print('drag end: ');
   }
 
   @override
@@ -159,13 +158,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     if (constraint == null) {
       return;
     }
-    print(target.worldTranslation);
-    if (target.worldTranslation.values[1] < tailY + constraint!.top ||
-        target.worldTranslation.values[1] > tailY + constraint!.bottom) {
-      print(tailY);
-
-      // target.y -= 1 * dy;
-    }
+    target.x = target.x.clamp(constraint!.left, constraint!.right);
+    target.y = target.y.clamp(constraint!.top, constraint!.bottom);
   }
 
   @override
