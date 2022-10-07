@@ -56,7 +56,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   double x = 0;
   Vector2 ballVelocity = Vector2(0, 0);
   Vector2 ballSpawn = Vector2(150, -200);
-  Vector2 targetSpawn = Vector2(-300, -200);
+  Vector2 targetSpawn = Vector2(-0, -000);
   int activeIndex = 0;
   @override
   Color backgroundColor() => const Color(0xff471717);
@@ -86,7 +86,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         a.forEachComponent((child) {
           switch (child.name) {
             case 'target':
-              // (child as Shape).opacity = 0;
+              (child as Shape).opacity = 0;
               if (players.length <= targetCount) {
                 players.add(Player());
               }
@@ -128,7 +128,11 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
               print(child.name);
               break;
             case 'val':
-              var e = child;
+              var e = child as RootBone;
+              if (tailCount > 0) {
+                e.x += court!.x / 2;
+                e.scaleY *= -1;
+              }
               print(child.name);
               break;
           }
@@ -211,9 +215,9 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         // p.target.x += 10;
         // print()
         final dTarget = p.targetSpawn - Vector2(p.target.x, p.target.y);
-        print(acos(dTarget.y / dTarget.x));
+        print({cos(dTarget.y / dTarget.x), sin(dTarget.y / dTarget.x)});
         // p.target.x += acos(dTarget.y / dTarget.x);
-        p.target.x -= dCharge * dTarget.y / 200;
+        p.target.x -= dCharge * dTarget.y / 20;
         // p.target.y -= dCharge * dTarget.x / 100;
         // ballVelocity
       }
@@ -228,10 +232,10 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
       final d = ballPos - tailPos;
       final dist = sqrt(d.x * d.x + d.y * d.y);
-      if (dist > 50) {
+      if (dist > 50 || d.y > 50) {
         continue;
       }
-      ball!.x -= d.x / d.x.abs();
+      ball!.x -= d.x;
       final tailMovement = tailPos - p.tailPrevious;
 
       if (ballPos.y + ballRadius! > tailPos.y) {
