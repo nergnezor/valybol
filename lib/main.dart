@@ -71,70 +71,85 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
 
   Future<void> loadRive(double xPosition, double yPosition) async {
-    Artboard artboard =
-        await loadArtboard(RiveFile.asset('assets/valybol.riv'));
-    CustomRiveComponent component = CustomRiveComponent(artboard: artboard);
-    var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
-    component.position = -diff / 2;
-    add(component);
-    Artboard artboard2 = await loadArtboard(RiveFile.asset('assets/whale.riv'));
-    Artboard artboard3 = await loadArtboard(RiveFile.asset('assets/whale.riv'));
-    CustomRiveComponent component2 = CustomRiveComponent(artboard: artboard2);
-    CustomRiveComponent component3 = CustomRiveComponent(artboard: artboard3);
-    add(component2);
-    add(component3);
+    // Artboard artboard =
+    //     await loadArtboard(RiveFile.asset('assets/valybol.riv'));
+    // CustomRiveComponent component = CustomRiveComponent(artboard: artboard);
+    // var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
+    // component.position = -diff / 2;
+    // add(component);
+    List<Artboard> whaleBoards = <Artboard>[];
+    Artboard artboard = await addWhale('assets/valybol.riv');
+    artboard = await addWhale('assets/whale.riv');
+    whaleBoards.add(artboard);
+    artboard = await addWhale('assets/whale.riv');
+    whaleBoards.add(artboard);
+
+    // whaleBoards.add(addWhale() as Artboard);
+    // Artboard artboard3 = await addWhale();
 
     int targetCount = 0;
     int tailCount = 0;
-    artboard2.forEachComponent((child) {
-      switch (child.name) {
-        case 'target':
-          // (child as Shape).opacity = 0;
-          if (players.length <= targetCount) {
-            players.add(Player());
-          }
-          players[targetCount].target = child as Shape;
+    for (var a in whaleBoards) {
+      {
+        a.forEachComponent((child) {
+          switch (child.name) {
+            case 'target':
+              // (child as Shape).opacity = 0;
+              if (players.length <= targetCount) {
+                players.add(Player());
+              }
+              players[targetCount].target = child as Shape;
 
-          ++targetCount;
-          print(child.name);
+              ++targetCount;
+              print(child.name);
 
-          if (constraint == null) {
-            final c = child.children.whereType<TranslationConstraint>().single;
-            constraint =
-                Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-            return;
-          }
-          break;
+              if (constraint == null) {
+                // final c =
+                //     child.children.whereType<TranslationConstraint>().single;
+                // constraint = Rect.fromLTRB(
+                //     c.minValue, c.minValueY, c.maxValue, c.maxValueY);
+                // continue;
+              }
+              break;
 
-        case 'rectangle':
-          court =
-              Vector2((child as Rectangle).width, (child as Rectangle).height);
-          print(court!.toString());
-          break;
-        case 'tail':
-          if (players.length <= tailCount) {
-            players.add(Player());
+            case 'rectangle':
+              court = Vector2(
+                  (child as Rectangle).width, (child as Rectangle).height);
+              print(court!.toString());
+              break;
+            case 'tail':
+              if (players.length <= tailCount) {
+                players.add(Player());
+              }
+              players[tailCount].tail = child as Node;
+              ++tailCount;
+              print(child.name);
+              break;
+            case 'ball':
+              ball = child as Shape;
+              ball!.x = ballSpawn.x;
+              ball!.y = ballSpawn.y;
+              print(child.name);
+              break;
+            case 'ball ellipse':
+              ballRadius = (child as Ellipse).radiusX;
+              print(child.name);
+              break;
+            case 'val':
+              var e = child;
+              print(child.name);
+              break;
           }
-          players[tailCount].tail = child as Node;
-          ++tailCount;
-          print(child.name);
-          break;
-        case 'ball':
-          ball = child as Shape;
-          ball!.x = ballSpawn.x;
-          ball!.y = ballSpawn.y;
-          print(child.name);
-          break;
-        case 'ball ellipse':
-          ballRadius = (child as Ellipse).radiusX;
-          print(child.name);
-          break;
-        case 'val':
-          var e = child;
-          print(child.name);
-          break;
+        });
       }
-    });
+    }
+  }
+
+  Future<Artboard> addWhale(String path) async {
+    Artboard artboard2 = await loadArtboard(RiveFile.asset(path));
+    CustomRiveComponent component2 = CustomRiveComponent(artboard: artboard2);
+    add(component2);
+    return artboard2;
   }
 
   @override
