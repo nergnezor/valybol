@@ -18,7 +18,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/beach.riv
+    - assets/valybol.riv
+    - assets/whale.riv
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

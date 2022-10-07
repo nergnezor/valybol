@@ -71,15 +71,22 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
 
   Future<void> loadRive(double xPosition, double yPosition) async {
-    Artboard artboard = await loadArtboard(RiveFile.asset('assets/beach.riv'));
+    Artboard artboard =
+        await loadArtboard(RiveFile.asset('assets/valybol.riv'));
     CustomRiveComponent component = CustomRiveComponent(artboard: artboard);
     var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
-
     component.position = -diff / 2;
     add(component);
+    Artboard artboard2 = await loadArtboard(RiveFile.asset('assets/whale.riv'));
+    Artboard artboard3 = await loadArtboard(RiveFile.asset('assets/whale.riv'));
+    CustomRiveComponent component2 = CustomRiveComponent(artboard: artboard2);
+    CustomRiveComponent component3 = CustomRiveComponent(artboard: artboard3);
+    add(component2);
+    add(component3);
+
     int targetCount = 0;
     int tailCount = 0;
-    artboard.forEachComponent((child) {
+    artboard2.forEachComponent((child) {
       switch (child.name) {
         case 'target':
           // (child as Shape).opacity = 0;
@@ -176,9 +183,12 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
   @override
   void update(double dt) {
+    super.update(dt);
+
     if (ball == null) {
       return;
     }
+    return;
     var i = 0;
     ballIsFalling = true;
     Vector2 ballPos = Vector2(
@@ -191,10 +201,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         // ballVelocity.x += p.angle * 0.01;
         // p.target.x += 10;
         // print()
-        final dTarget = p.targetSpawn -
-            Vector2(p.target.worldTranslation.values[0],
-                p.target.worldTranslation.values[1]);
-        // print(acos(dTarget.y / dTarget.x));
+        final dTarget = p.targetSpawn - Vector2(p.target.x, p.target.y);
+        print(acos(dTarget.y / dTarget.x));
         // p.target.x += acos(dTarget.y / dTarget.x);
         p.target.x -= dCharge * dTarget.y / 200;
         // p.target.y -= dCharge * dTarget.x / 100;
@@ -252,7 +260,6 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
     ball!.x += ballVelocity.x;
     ball!.y += ballVelocity.y;
-    super.update(dt);
   }
 }
 
@@ -267,4 +274,10 @@ class CustomRiveComponent extends RiveComponent
   late OneShotAnimation controller;
   late Fill fill;
   Vector3 velocity = Vector3.zero();
+
+  @override
+  Future<void>? onLoad() {
+    // TODO: implement onLoad
+    return super.onLoad();
+  }
 }
