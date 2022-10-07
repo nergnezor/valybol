@@ -71,21 +71,13 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
 
   Future<void> loadRive(double xPosition, double yPosition) async {
-    // Artboard artboard =
-    //     await loadArtboard(RiveFile.asset('assets/valybol.riv'));
-    // CustomRiveComponent component = CustomRiveComponent(artboard: artboard);
-    // var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
-    // component.position = -diff / 2;
-    // add(component);
     List<Artboard> whaleBoards = <Artboard>[];
     Artboard artboard = await addWhale('assets/valybol.riv');
-    artboard = await addWhale('assets/whale.riv');
     whaleBoards.add(artboard);
     artboard = await addWhale('assets/whale.riv');
     whaleBoards.add(artboard);
-
-    // whaleBoards.add(addWhale() as Artboard);
-    // Artboard artboard3 = await addWhale();
+    artboard = await addWhale('assets/whale.riv');
+    whaleBoards.add(artboard);
 
     int targetCount = 0;
     int tailCount = 0;
@@ -104,11 +96,11 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
               print(child.name);
 
               if (constraint == null) {
-                // final c =
-                //     child.children.whereType<TranslationConstraint>().single;
-                // constraint = Rect.fromLTRB(
-                //     c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-                // continue;
+                final c =
+                    child.children.whereType<TranslationConstraint>().single;
+                constraint = Rect.fromLTRB(
+                    c.minValue, c.minValueY, c.maxValue, c.maxValueY);
+                return;
               }
               break;
 
@@ -146,10 +138,12 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
 
   Future<Artboard> addWhale(String path) async {
-    Artboard artboard2 = await loadArtboard(RiveFile.asset(path));
-    CustomRiveComponent component2 = CustomRiveComponent(artboard: artboard2);
-    add(component2);
-    return artboard2;
+    Artboard artboard = await loadArtboard(RiveFile.asset(path));
+    final component = CustomRiveComponent(artboard: artboard);
+    var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
+    component.position = -diff / 2;
+    add(component);
+    return artboard;
   }
 
   @override
@@ -203,7 +197,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     if (ball == null) {
       return;
     }
-    return;
+    // return;
     var i = 0;
     ballIsFalling = true;
     Vector2 ballPos = Vector2(
