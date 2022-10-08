@@ -1,12 +1,7 @@
 import 'dart:math';
-import 'dart:ui';
-
 import 'package:rive/math.dart';
-import 'package:rive/src/rive_core/shapes/shape.dart';
+import 'package:rive/rive.dart';
 import 'package:valybol/gamestate.dart';
-// import 'package:vector_math/vector_math_64.dart';
-
-import 'player.dart';
 
 class Ball {
   Shape? shape;
@@ -26,17 +21,11 @@ class Ball {
     for (var p in s.players) {
       if (!p.isCharging && p.charge > 0) {
         final dCharge = min(10, p.charge);
-        // p.charge -= dCharge;
-        // ballVelocity.y -= dCharge / 10;
-        // ballVelocity.x += p.angle * 0.01;
-        // p.target.x += 10;
-        // print()
+        p.charge -= dCharge;
         final dTarget = p.targetSpawn - p.target.worldTranslation;
-        // print({cos(dTarget.y / dTarget.x), sin(dTarget.y / dTarget.x)});
-        // p.target.x += acos(dTarget.y / dTarget.x);
         ballVelocity.y = min(0, ballVelocity.y);
-        p.target.x -= dCharge * cos(dTarget.y / dTarget.x);
-        // p.target.y -= dCharge * sin(dTarget.y / dTarget.x);
+        ballVelocity.x -= dCharge * cos(dTarget.y / dTarget.x);
+        ballVelocity.y -= dCharge * sin(dTarget.y / dTarget.x);
         // p.target.y -= dCharge * dTarget.x / 100;
         // ballVelocity
       }

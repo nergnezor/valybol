@@ -1,8 +1,5 @@
-import 'dart:math';
 import 'dart:ui';
-
 import 'package:rive/math.dart';
-
 import 'ball.dart';
 import 'player.dart';
 

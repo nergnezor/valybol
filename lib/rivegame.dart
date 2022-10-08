@@ -1,24 +1,23 @@
-// ignore_for_file: implementation_imports
-
 import 'dart:ui';
-
-// import 'package:flame/components.dart';
-// import 'package:flame/experimental.dart';
 import 'package:flame/components.dart';
 import 'package:flame_rive/flame_rive.dart';
+import 'package:rive/components.dart';
 import 'package:rive/math.dart';
 import 'package:rive/rive.dart';
 import 'package:valybol/gamestate.dart';
 import 'package:valybol/player.dart';
+// ignore: implementation_imports
 import 'package:rive/src/rive_core/bones/root_bone.dart';
+// ignore: implementation_imports
 import 'package:rive/src/rive_core/shapes/rectangle.dart';
+// ignore: implementation_imports
 import 'package:rive/src/rive_core/shapes/ellipse.dart';
-import 'package:rive/src/rive_core/node.dart';
-// import 'package:rive/src/rive_core/math/vec2d.dart';
+// ignore: implementation_imports
 import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
 
 class CustomRiveComponent extends RiveComponent
     with HasGameRef, Tappable, Draggable {
+  @override
   final Artboard artboard;
   final Gamestate gamestate;
 
@@ -27,14 +26,10 @@ class CustomRiveComponent extends RiveComponent
             artboard: artboard, size: Vector2(artboard.width, artboard.height));
   late OneShotAnimation controller;
   late Fill fill;
-  // Vector3 velocity = Vector3.zero();
 
   @override
   Future<void>? onLoad() {
-    int targetCount = 0;
-    int tailCount = 0;
     parseArtboard(artboard, gamestate);
-    // TODO: implement onLoad
     return super.onLoad();
   }
 }
@@ -45,7 +40,6 @@ Future<CustomRiveComponent> addRiveArtboard(
   final component = CustomRiveComponent(artboard, gamestate);
   component.position.x = (size.x - artboard.width) / 2;
   component.position.y = (size.y - artboard.height) / 2;
-  // add(component);
   return component;
 }
 
@@ -68,11 +62,7 @@ void parseArtboard(Artboard a, Gamestate s) {
       switch (child.name) {
         case 'target':
           (child as Shape).opacity = 0;
-
           s.players.last.target = child as Shape;
-
-          print(child.name);
-
           if (s.constraint == null) {
             final c = child.children.whereType<TranslationConstraint>().single;
             s.constraint =
@@ -80,7 +70,6 @@ void parseArtboard(Artboard a, Gamestate s) {
             return;
           }
           break;
-
         case 'rectangle':
           s.court = Vec2D();
           s.court!.x = (child as Rectangle).width;
@@ -99,8 +88,6 @@ void parseArtboard(Artboard a, Gamestate s) {
           break;
         case 'val':
           var c = child as RootBone;
-
-          print('add player: ');
           if (s.players.length.isOdd) {
             c.x += s.court!.x / 2;
             c.scaleY *= -1;
