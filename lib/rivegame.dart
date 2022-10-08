@@ -33,7 +33,7 @@ class CustomRiveComponent extends RiveComponent
   Future<void>? onLoad() {
     int targetCount = 0;
     int tailCount = 0;
-    parseArtboard(artboard, targetCount, tailCount, gamestate);
+    parseArtboard(artboard, gamestate);
     // TODO: implement onLoad
     return super.onLoad();
   }
@@ -62,7 +62,7 @@ Future<List<CustomRiveComponent>> loadRive(
   return components;
 }
 
-void parseArtboard(Artboard a, int targetCount, int tailCount, Gamestate s) {
+void parseArtboard(Artboard a, Gamestate s) {
   {
     a.forEachComponent((child) {
       switch (child.name) {
@@ -71,7 +71,6 @@ void parseArtboard(Artboard a, int targetCount, int tailCount, Gamestate s) {
 
           s.players.last.target = child as Shape;
 
-          ++targetCount;
           print(child.name);
 
           if (s.constraint == null) {
@@ -89,7 +88,6 @@ void parseArtboard(Artboard a, int targetCount, int tailCount, Gamestate s) {
           break;
         case 'tail':
           s.players.last.tail = child as Node;
-          ++tailCount;
           break;
         case 'ball':
           s.ball.shape = child as Shape;
@@ -100,14 +98,14 @@ void parseArtboard(Artboard a, int targetCount, int tailCount, Gamestate s) {
           s.ball.ballRadius = (child as Ellipse).radiusX;
           break;
         case 'val':
-          var e = child as RootBone;
-          s.players.add(Player());
+          var c = child as RootBone;
 
           print('add player: ');
-          if (tailCount > 0) {
-            e.x += s.court!.x / 2;
-            e.scaleY *= -1;
+          if (s.players.length.isOdd) {
+            c.x += s.court!.x / 2;
+            c.scaleY *= -1;
           }
+          s.players.add(Player());
           break;
       }
     });
