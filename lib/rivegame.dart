@@ -1,3 +1,5 @@
+// ignore_for_file: implementation_imports
+
 import 'dart:ui';
 
 // import 'package:flame/components.dart';
@@ -8,7 +10,6 @@ import 'package:rive/math.dart';
 import 'package:rive/rive.dart';
 import 'package:valybol/gamestate.dart';
 import 'package:valybol/player.dart';
-import 'package:vector_math/vector_math_64.dart';
 import 'package:rive/src/rive_core/bones/root_bone.dart';
 import 'package:rive/src/rive_core/shapes/rectangle.dart';
 import 'package:rive/src/rive_core/shapes/ellipse.dart';
@@ -18,12 +19,12 @@ import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
 
 class CustomRiveComponent extends RiveComponent
     with HasGameRef, Tappable, Draggable {
-  final Artboard artboarde;
+  final Artboard artboard;
   final Gamestate gamestate;
 
-  CustomRiveComponent(this.artboarde, this.gamestate)
-      : super(artboard: artboarde);
-
+  CustomRiveComponent(this.artboard, this.gamestate)
+      : super(
+            artboard: artboard, size: Vector2(artboard.width, artboard.height));
   late OneShotAnimation controller;
   late Fill fill;
   // Vector3 velocity = Vector3.zero();
