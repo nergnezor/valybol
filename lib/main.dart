@@ -217,7 +217,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
         final dTarget = p.targetSpawn - Vector2(p.target.x, p.target.y);
         print({cos(dTarget.y / dTarget.x), sin(dTarget.y / dTarget.x)});
         // p.target.x += acos(dTarget.y / dTarget.x);
-        p.target.x -= dCharge * dTarget.y / 20;
+        p.target.x -= dCharge * cos(dTarget.y / dTarget.x);
+        // p.target.y -= dCharge * sin(dTarget.y / dTarget.x) ;
         // p.target.y -= dCharge * dTarget.x / 100;
         // ballVelocity
       }
