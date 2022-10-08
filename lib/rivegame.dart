@@ -80,8 +80,9 @@ void parseArtboard(Artboard a, Gamestate s) {
           break;
         case 'ball':
           s.ball.shape = child as Shape;
-          s.ball.shape!.x = 150;
-          s.ball.shape!.y = -200;
+
+          s.ball.ballSpawn.x = child.x + 50;
+          s.ball.ballSpawn.y = child.y;
           break;
         case 'ball ellipse':
           s.ball.ballRadius = (child as Ellipse).radiusX;

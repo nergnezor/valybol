@@ -10,7 +10,7 @@ class Ball {
   bool ballIsFalling = true; //
   double? ballRadius;
 
-  void updateBall(double dt, Gamestate s) {
+  void update(double dt, Gamestate s) {
     if (shape == null) {
       return;
     }

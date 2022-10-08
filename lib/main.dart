@@ -64,6 +64,6 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void update(double dt) {
     super.update(dt);
-    gamestate.ball.updateBall(dt, gamestate);
+    gamestate.ball.update(dt, gamestate);
   }
 }

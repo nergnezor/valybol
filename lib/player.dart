@@ -10,4 +10,5 @@ class Player {
   bool isCharging = false;
   double angle = 0;
   Vec2D targetSpawn = Vec2D();
+  Vec2D ballSpawn = Vec2D();
 }
