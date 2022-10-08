@@ -3,12 +3,14 @@ description: valybol.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 environment:
-  sdk: '>=2.13.0 <3.0.0'
+  sdk: '>=2.13.0 <3.1.0'
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  flame_rive: ^1.2.0
+  flame_rive: ^1.5.2
+  rive: ^0.9.1
+  flame: ^1.4.0
   flutter_displaymode: ^0.4.0
   motion_sensors: ^0.1.0
 dev_dependencies:

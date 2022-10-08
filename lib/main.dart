@@ -1,23 +1,17 @@
-import 'dart:io';
-import 'dart:math';
+// ignore_for_file: depend_on_referenced_packages
 
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Draggable;
 import 'package:flame/game.dart';
-import 'package:flame_rive/flame_rive.dart';
 import 'package:flutter/services.dart';
 // import 'package:motion_sensors/motion_sensors.dart';
-import 'package:rive/rive.dart';
-import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:rive/src/core/core.dart';
-import 'package:rive/src/rive_core/bones/root_bone.dart';
-import 'package:rive/src/rive_core/shapes/rectangle.dart';
-import 'package:rive/src/rive_core/shapes/ellipse.dart';
-import 'package:rive/src/rive_core/node.dart';
-import 'package:rive/src/rive_core/math/vec2d.dart';
-import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
+import 'ball.dart';
+import 'gamestate.dart';
+import 'rivegame.dart';
+import 'player.dart';
 
 void main() {
   print('start main');
@@ -34,120 +28,24 @@ void main() {
   }
 }
 
-class Player {
-  late Shape target;
-  late Node tail;
-  Vector2 tailPrevious = Vector2.zero();
-  int charge = 0;
-  bool isCharging = false;
-  double angle = 0;
-  Vector2 targetSpawn = Vector2.zero();
-}
-
 class MyGame extends FlameGame with HasTappables, HasDraggables {
-  List<Player> players = <Player>[];
-  Player? player;
-  Rect? constraint;
-  Vector2? court;
-  Shape? ball;
-  double? ballRadius;
-  static double frameRate = 60;
-  double y = 0;
-  double x = 0;
-  Vector2 ballVelocity = Vector2(0, 0);
-  Vector2 ballSpawn = Vector2(150, -200);
-  Vector2 targetSpawn = Vector2(-0, -000);
+  // static double frameRate = 60;
+  // double y = 0;
+  // double x = 0;
+  // Vector2 targetSpawn = Vector2(-0, -000);
   int activeIndex = 0;
+  Gamestate gamestate = Gamestate();
   @override
   Color backgroundColor() => const Color(0xff471717);
-  bool ballIsFalling = true; //
 
   @override
   Future<void> onLoad() async {
     // BubbleComponent.screenSize = size;
     print('Load Rive artboard...');
-    loadRive(0, 0);
+    final components = await loadRive(size, gamestate);
+    addAll(components);
     await super.onLoad();
-  }
-
-  Future<void> loadRive(double xPosition, double yPosition) async {
-    List<Artboard> whaleBoards = <Artboard>[];
-    Artboard artboard = await addWhale('assets/valybol.riv');
-    whaleBoards.add(artboard);
-    artboard = await addWhale('assets/whale.riv');
-    whaleBoards.add(artboard);
-    artboard = await addWhale('assets/whale.riv');
-    whaleBoards.add(artboard);
-
-    int targetCount = 0;
-    int tailCount = 0;
-    for (var a in whaleBoards) {
-      {
-        a.forEachComponent((child) {
-          switch (child.name) {
-            case 'target':
-              (child as Shape).opacity = 0;
-              if (players.length <= targetCount) {
-                players.add(Player());
-              }
-              players[targetCount].target = child as Shape;
-
-              ++targetCount;
-              print(child.name);
-
-              if (constraint == null) {
-                final c =
-                    child.children.whereType<TranslationConstraint>().single;
-                constraint = Rect.fromLTRB(
-                    c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-                return;
-              }
-              break;
-
-            case 'rectangle':
-              court = Vector2(
-                  (child as Rectangle).width, (child as Rectangle).height);
-              print(court!.toString());
-              break;
-            case 'tail':
-              if (players.length <= tailCount) {
-                players.add(Player());
-              }
-              players[tailCount].tail = child as Node;
-              ++tailCount;
-              print(child.name);
-              break;
-            case 'ball':
-              ball = child as Shape;
-              ball!.x = ballSpawn.x;
-              ball!.y = ballSpawn.y;
-              print(child.name);
-              break;
-            case 'ball ellipse':
-              ballRadius = (child as Ellipse).radiusX;
-              print(child.name);
-              break;
-            case 'val':
-              var e = child as RootBone;
-              if (tailCount > 0) {
-                e.x += court!.x / 2;
-                e.scaleY *= -1;
-              }
-              print(child.name);
-              break;
-          }
-        });
-      }
-    }
-  }
-
-  Future<Artboard> addWhale(String path) async {
-    Artboard artboard = await loadArtboard(RiveFile.asset(path));
-    final component = CustomRiveComponent(artboard: artboard);
-    var diff = Vector2(artboard.width - size.x, artboard.height - size.y);
-    component.position = -diff / 2;
-    add(component);
-    return artboard;
+    print('loaded');
   }
 
   @override
@@ -155,7 +53,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     super.onTapDown(pointerId, info);
     activeIndex =
         (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
-    player = players[activeIndex];
+    gamestate.player = gamestate.players[activeIndex];
 
     print('tap down: ' + pointerId.toString());
   }
@@ -171,7 +69,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void onDragEnd(int i, DragEndInfo info) {
     super.onDragEnd(i, info);
-    player?.isCharging = false;
+    gamestate.player?.isCharging = false;
     // player?.angle = 0;
     print('drag end: ');
   }
@@ -179,7 +77,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void onDragUpdate(int i, DragUpdateInfo info) {
     super.onDragUpdate(i, info);
-    var player = players[activeIndex];
+    var player = gamestate.players[activeIndex];
     var target = player.target;
     // final tailY = player.tail.worldTranslation.values[1];
 
@@ -198,100 +96,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   void update(double dt) {
     super.update(dt);
 
-    if (ball == null) {
-      return;
-    }
     // return;
-    var i = 0;
-    ballIsFalling = true;
-    Vector2 ballPos = Vector2(
-        ball!.worldTranslation.values[0], ball!.worldTranslation.values[1]);
-    for (var p in players) {
-      if (!p.isCharging && p.charge > 0) {
-        final dCharge = min(10, p.charge);
-        // p.charge -= dCharge;
-        // ballVelocity.y -= dCharge / 10;
-        // ballVelocity.x += p.angle * 0.01;
-        // p.target.x += 10;
-        // print()
-        final dTarget = p.targetSpawn - Vector2(p.target.x, p.target.y);
-        print({cos(dTarget.y / dTarget.x), sin(dTarget.y / dTarget.x)});
-        // p.target.x += acos(dTarget.y / dTarget.x);
-        p.target.x -= dCharge * cos(dTarget.y / dTarget.x);
-        // p.target.y -= dCharge * sin(dTarget.y / dTarget.x) ;
-        // p.target.y -= dCharge * dTarget.x / 100;
-        // ballVelocity
-      }
-      p.target.x = p.target.x.clamp(constraint!.left, constraint!.right);
-      p.target.y = p.target.y.clamp(constraint!.top, constraint!.bottom);
-      Vector2 tailPos = Vector2(
-          p.tail.worldTranslation.values[0], p.tail.worldTranslation.values[1]);
-      if (p.tailPrevious == Vector2.zero()) {
-        p.tailPrevious = tailPos;
-        continue;
-      }
-
-      final d = ballPos - tailPos;
-      final dist = sqrt(d.x * d.x + d.y * d.y);
-      if (dist > 50 || d.y > 50) {
-        continue;
-      }
-      ball!.x -= d.x;
-      final tailMovement = tailPos - p.tailPrevious;
-
-      if (ballPos.y + ballRadius! > tailPos.y) {
-        ball!.worldTranslation.values[1] =
-            p.tail.worldTranslation.values[1] - ballRadius!;
-        if (ballVelocity.y > 0) {
-          ballVelocity.y = 0;
-        }
-        ballVelocity.y = min(0, ballVelocity.y);
-        ballVelocity += tailMovement * dt * 10;
-        ballIsFalling = false;
-      }
-
-      p.tailPrevious = tailPos;
-      i += 1;
-      final dTarget = p.targetSpawn -
-          Vector2(p.target.worldTranslation.values[0],
-              p.target.worldTranslation.values[1]);
-      // p.target.x -= dTarget.y / 10;
-      // p.target.y -= dTarget.x / 10;
-    }
-    ballVelocity.x *= 0.98;
-    if (ballIsFalling) {
-      ballVelocity.y += 0.3;
-      if (ballPos.y >= court!.y) {
-        ballVelocity = Vector2.zero();
-        ball!.opacity -= 0.05;
-        if (ball!.opacity <= 0) {
-          ball!.opacity = 1;
-          ball!.x = ballSpawn.x;
-          ball!.y = ballSpawn.y;
-        }
-      }
-    }
-
-    ball!.x += ballVelocity.x;
-    ball!.y += ballVelocity.y;
-  }
-}
-
-class CustomRiveComponent extends RiveComponent
-    with HasGameRef, Tappable, Draggable {
-  final Artboard artboard;
-
-  CustomRiveComponent({required this.artboard})
-      : super(
-            artboard: artboard, size: Vector2(artboard.width, artboard.height));
-
-  late OneShotAnimation controller;
-  late Fill fill;
-  Vector3 velocity = Vector3.zero();
-
-  @override
-  Future<void>? onLoad() {
-    // TODO: implement onLoad
-    return super.onLoad();
+    gamestate.ball.updateBall(dt, gamestate);
   }
 }
