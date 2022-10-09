@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 // import 'package:motion_sensors/motion_sensors.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:rive/math.dart';
 import 'gamestate.dart';
 import 'rivegame.dart';
 
@@ -41,6 +42,18 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     int activeIndex =
         (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
     gamestate.player = gamestate.players[activeIndex];
+    gamestate.player!.component.controller
+        .pointerDown(Vec2D.fromValues(200, 300));
+  }
+
+  @override
+  void onTapUp(int pointerId, TapUpInfo info) {
+    super.onTapUp(pointerId, info);
+    // int activeIndex =
+    //     (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
+    // gamestate.player = gamestate.players[activeIndex];
+    gamestate.player!.component.controller
+        .pointerUp(Vec2D.fromValues(200, 300));
   }
 
   @override
@@ -64,7 +77,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void update(double dt) {
     super.update(dt);
-    gamestate.ball.update(dt, gamestate);
+    // gamestate.ball.update(dt, gamestate);
   }
 
   @override

@@ -16,8 +16,7 @@ import 'package:rive/src/rive_core/shapes/ellipse.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
 
-class CustomRiveComponent extends RiveComponent
-    with HasGameRef, Tappable, Draggable {
+class CustomRiveComponent extends RiveComponent with Tappable, Draggable {
   @override
   final Artboard artboard;
   final Gamestate gamestate;
@@ -25,12 +24,27 @@ class CustomRiveComponent extends RiveComponent
   CustomRiveComponent(this.artboard, this.gamestate)
       : super(
             artboard: artboard, size: Vector2(artboard.width, artboard.height));
-  late OneShotAnimation controller;
+  // late OneShotAnimation controller;
+  late StateMachineController controller;
   late Fill fill;
 
   @override
   Future<void>? onLoad() {
-    super.onLoad();
+    // StateMachine? stateMachine = artboard.defaultStateMachine;
+    // stateMachine.
+    // stateMachine = StateMachine();
+    // stateMachine =artboard.defaultStateMachine
+    controller =
+        StateMachineController.fromArtboard(artboard, 'State Machine 1')!;
+    // controller = OneShotAnimation('shoot', autoplay: true);
+    artboard.addController(controller);
+    // controller.artboard.addController(controller);
+    // artboard.forEachComponent((child) {
+    //   if (child.name == 'fyllning') {
+    //     fill = child as Fill;
+    //   }
+    // });
+    return super.onLoad();
   }
 }
 
