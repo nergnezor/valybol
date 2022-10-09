@@ -41,7 +41,7 @@ class Ball {
       }
     }
     if (ballIsFalling) {
-      ballVelocity.y += 15 * dt;
+      ballVelocity.y += 30* dt;
       if (ballPos.y > s.court!.y) {
         ballVelocity = Vec2D();
         s.ball.shape!.opacity -= 0.01;
