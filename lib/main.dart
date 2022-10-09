@@ -66,4 +66,21 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     super.update(dt);
     gamestate.ball.update(dt, gamestate);
   }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    _drawVerticalLines(canvas);
+  }
+
+  void _drawVerticalLines(Canvas c) {
+    for (var p in gamestate.players) {
+      final offset = p.component.toRect();
+      final current =
+          Offset(p.target!.worldTranslation.x, p.target!.worldTranslation.y) +
+              offset.topLeft;
+      final target = Offset(p.targetSpawn.x, p.targetSpawn.y);
+      c.drawLine(current, target, Paint()..color = Colors.red);
+    }
+  }
 }

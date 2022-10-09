@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame_rive/flame_rive.dart';
@@ -29,8 +30,7 @@ class CustomRiveComponent extends RiveComponent
 
   @override
   Future<void>? onLoad() {
-    parseArtboard(artboard, gamestate);
-    return super.onLoad();
+    super.onLoad();
   }
 }
 
@@ -40,6 +40,7 @@ Future<CustomRiveComponent> addRiveArtboard(
   final component = CustomRiveComponent(artboard, gamestate);
   component.position.x = (size.x - artboard.width) / 2;
   component.position.y = (size.y - artboard.height) / 2;
+  parseArtboard(artboard, gamestate);
   return component;
 }
 
@@ -48,12 +49,19 @@ Future<List<CustomRiveComponent>> loadRive(
   final components = <CustomRiveComponent>[];
   var c = await addRiveArtboard('assets/valybol.riv', size, gamestate);
   components.add(c);
-  c = await addRiveArtboard('assets/whale.riv', size, gamestate);
-  components.add(c);
-  c = await addRiveArtboard('assets/whale.riv', size, gamestate);
-  components.add(c);
+  await addPlayer(size, gamestate, components);
+  await addPlayer(size, gamestate, components);
 
   return components;
+}
+
+Future<void> addPlayer(
+    Vector2 size, Gamestate s, List<CustomRiveComponent> components) async {
+  final player = Player();
+  s.players.add(player);
+  s.player = player;
+  player.component = await addRiveArtboard('assets/whale.riv', size, s);
+  components.add(player.component);
 }
 
 void parseArtboard(Artboard a, Gamestate s) {
@@ -61,8 +69,10 @@ void parseArtboard(Artboard a, Gamestate s) {
     a.forEachComponent((child) {
       switch (child.name) {
         case 'target':
-          (child as Shape).opacity = 0;
-          s.players.last.target = child as Shape;
+          child = child as Shape;
+          // (child as Shape).opacity = 0;
+          s.player?.target = child;
+          s.player?.targetSpawn = child.worldTranslation;
           if (s.constraint == null) {
             final c = child.children.whereType<TranslationConstraint>().single;
             s.constraint =
@@ -71,12 +81,11 @@ void parseArtboard(Artboard a, Gamestate s) {
           }
           break;
         case 'rectangle':
-          s.court = Vec2D();
-          s.court!.x = (child as Rectangle).width;
-          s.court!.y = (child as Rectangle).height;
+          child = child as Rectangle;
+          s.court = Vec2D.fromValues(child.width, child.height);
           break;
         case 'tail':
-          s.players.last.tail = child as Node;
+          s.player?.tail = child as Node;
           break;
         case 'ball':
           s.ball.shape = child as Shape;
@@ -89,11 +98,10 @@ void parseArtboard(Artboard a, Gamestate s) {
           break;
         case 'val':
           var c = child as RootBone;
-          if (s.players.length.isOdd) {
+          if (s.players.length.isEven) {
             c.x += s.court!.x / 2;
             c.scaleY *= -1;
           }
-          s.players.add(Player());
           break;
       }
     });

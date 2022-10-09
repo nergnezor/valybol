@@ -22,15 +22,15 @@ class Ball {
       if (!p.isCharging && p.charge > 0) {
         final dCharge = min(10, p.charge);
         p.charge -= dCharge;
-        final dTarget = p.targetSpawn - p.target.worldTranslation;
+        final dTarget = p.targetSpawn - p.target!.worldTranslation;
         ballVelocity.y = min(0, ballVelocity.y);
         ballVelocity.x -= dCharge * cos(dTarget.y / dTarget.x);
         ballVelocity.y -= dCharge * sin(dTarget.y / dTarget.x);
         // p.target.y -= dCharge * dTarget.x / 100;
         // ballVelocity
       }
-      p.target.x = p.target.x.clamp(s.constraint!.left, s.constraint!.right);
-      p.target.y = p.target.y.clamp(s.constraint!.top, s.constraint!.bottom);
+      p.target!.x = p.target!.x.clamp(s.constraint!.left, s.constraint!.right);
+      p.target!.y = p.target!.y.clamp(s.constraint!.top, s.constraint!.bottom);
       Vec2D tailPos = p.tail.worldTranslation;
       if (p.tailPrevious.length() == 0) {
         p.tailPrevious = tailPos;
