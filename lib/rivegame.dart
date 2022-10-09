@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame_rive/flame_rive.dart';
