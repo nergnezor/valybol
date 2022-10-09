@@ -23,26 +23,14 @@ class CustomRiveComponent extends RiveComponent with Tappable, Draggable {
   CustomRiveComponent(this.artboard, this.gamestate)
       : super(
             artboard: artboard, size: Vector2(artboard.width, artboard.height));
-  // late OneShotAnimation controller;
   late StateMachineController controller;
   late Fill fill;
 
   @override
   Future<void>? onLoad() {
-    // StateMachine? stateMachine = artboard.defaultStateMachine;
-    // stateMachine.
-    // stateMachine = StateMachine();
-    // stateMachine =artboard.defaultStateMachine
     controller =
         StateMachineController.fromArtboard(artboard, 'State Machine 1')!;
-    // controller = OneShotAnimation('shoot', autoplay: true);
     artboard.addController(controller);
-    // controller.artboard.addController(controller);
-    // artboard.forEachComponent((child) {
-    //   if (child.name == 'fyllning') {
-    //     fill = child as Fill;
-    //   }
-    // });
     return super.onLoad();
   }
 }
@@ -64,9 +52,9 @@ Future<List<CustomRiveComponent>> loadRive(
   components.add(c);
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
-            components.last.position.x += 300;
-
-
+  components.last.position.x += 300;
+  // gamestate.ball.shape!.x = gamestate.ball.ballSpawn.x;
+// gamestate.player.
   return components;
 }
 
@@ -85,7 +73,7 @@ void parseArtboard(Artboard a, Gamestate s) {
       switch (child.name) {
         case 'target':
           child = child as Shape;
-          // (child as Shape).opacity = 0;
+          (child as Shape).opacity = 0;
           s.player?.target = child;
           s.player?.targetSpawn = child.worldTranslation;
           if (s.constraint == null) {
@@ -105,7 +93,7 @@ void parseArtboard(Artboard a, Gamestate s) {
         case 'ball':
           s.ball.shape = child as Shape;
 
-          s.ball.ballSpawn.x = child.x + 50;
+          s.ball.ballSpawn.x = child.x + 60;
           s.ball.ballSpawn.y = child.y;
           break;
         case 'ball ellipse':
@@ -115,7 +103,8 @@ void parseArtboard(Artboard a, Gamestate s) {
           var c = child as RootBone;
           if (s.players.length.isEven) {
             c.scaleY *= -1;
-          }    
+            // c.x += 300;
+          }
           break;
       }
     });

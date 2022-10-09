@@ -76,14 +76,14 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
   @override
   void update(double dt) {
+    gamestate.ball.update(dt, gamestate);
     super.update(dt);
-    // gamestate.ball.update(dt, gamestate);
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    _drawVerticalLines(canvas);
+    // _drawVerticalLines(canvas);
   }
 
   void _drawVerticalLines(Canvas c) {

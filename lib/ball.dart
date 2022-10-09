@@ -16,61 +16,38 @@ class Ball {
     }
     ballIsFalling = true;
     Vec2D ballPos = shape!.worldTranslation;
-    // , shape!.worldTranslation.values[1]);
-    // print(ballPos);
+    var count = 0;
     for (var p in s.players) {
-      if (!p.isCharging && p.charge > 0) {
-        final dCharge = min(10, p.charge);
-        p.charge -= dCharge;
-        final dTarget = p.targetSpawn - p.target!.worldTranslation;
-        ballVelocity.y = min(0, ballVelocity.y);
-        ballVelocity.x -= dCharge * cos(dTarget.y / dTarget.x);
-        ballVelocity.y -= dCharge * sin(dTarget.y / dTarget.x);
-        // p.target.y -= dCharge * dTarget.x / 100;
-        // ballVelocity
-      }
-      p.target!.x = p.target!.x.clamp(s.constraint!.left, s.constraint!.right);
-      p.target!.y = p.target!.y.clamp(s.constraint!.top, s.constraint!.bottom);
+      ++count;
       Vec2D tailPos = p.tail.worldTranslation;
-      if (p.tailPrevious.length() == 0) {
-        p.tailPrevious = tailPos;
-        continue;
+      if (count == 2) {
+        tailPos.x += 300;
       }
-
       final d = ballPos - tailPos;
       final dist = sqrt(d.x * d.x + d.y * d.y);
-      if (dist > 50 || d.y > 50) {
-        continue;
-      }
-      shape!.x -= d.x;
-      final tailMovement = tailPos - p.tailPrevious;
-
-      if (ballPos.y + ballRadius! > tailPos.y) {
-        shape!.worldTranslation.y = p.tail.worldTranslation.y - ballRadius!;
+      if (ballPos.y + ballRadius! > tailPos.y && d.x.abs() < ballRadius!) {
+        ballIsFalling = false;
         if (ballVelocity.y > 0) {
           ballVelocity.y = 0;
         }
-        ballVelocity.y = min(0, ballVelocity.y);
-        // ballVelocity += tailMovement * dt * 10;
-        ballIsFalling = false;
-      }
-
-      p.tailPrevious = tailPos;
-    }
-    ballVelocity.x *= 0.98;
-    if (ballIsFalling) {
-      ballVelocity.y += 0.3;
-      if (ballPos.y >= s.court!.y) {
-        ballVelocity = Vec2D();
-        shape!.opacity -= 0.05;
-        if (shape!.opacity <= 0) {
-          shape!.opacity = 1;
-          shape!.x = ballSpawn.x;
-          shape!.y = ballSpawn.y;
+        final yDiff = tailPos.y - (ballPos.y + ballRadius!);
+        shape!.y += yDiff;
+        if (yDiff / dt < ballVelocity.y) {
+          ballVelocity.y = 0.002 * yDiff / dt;
         }
       }
     }
-
+    if (ballIsFalling) {
+      ballVelocity.y += 15 * dt;
+      if (ballPos.y > s.court!.y) {
+        ballVelocity = Vec2D();
+        s.ball.shape!.opacity -= 0.01;
+        if (s.ball.shape!.opacity <= 0) {
+          s.ball.shape!.opacity = 1;
+          s.ball.shape!.translation = s.ball.ballSpawn;
+        }
+      }
+    }
     shape!.x += ballVelocity.x;
     shape!.y += ballVelocity.y;
   }
