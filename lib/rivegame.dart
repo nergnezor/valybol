@@ -64,7 +64,7 @@ Future<List<CustomRiveComponent>> loadRive(
   components.add(c);
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
-            components.last.position.x += gamestate.court!.x / 2;
+            components.last.position.x += 300;
 
 
   return components;
