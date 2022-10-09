@@ -64,6 +64,8 @@ Future<List<CustomRiveComponent>> loadRive(
   components.add(c);
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
+            components.last.position.x += gamestate.court!.x / 2;
+
 
   return components;
 }
@@ -112,9 +114,8 @@ void parseArtboard(Artboard a, Gamestate s) {
         case 'val':
           var c = child as RootBone;
           if (s.players.length.isEven) {
-            c.x += s.court!.x / 2;
             c.scaleY *= -1;
-          }
+          }    
           break;
       }
     });
