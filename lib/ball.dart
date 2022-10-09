@@ -23,6 +23,8 @@ class Ball {
       if (count == 2) {
         tailPos.x += 300;
       }
+      final dTail=tailPos-p.tailPrevious;
+      p.tailPrevious=tailPos;
       final d = ballPos - tailPos;
       final dist = sqrt(d.x * d.x + d.y * d.y);
       if (ballPos.y + ballRadius! > tailPos.y && d.x.abs() < ballRadius!) {
@@ -32,6 +34,7 @@ class Ball {
         }
         final yDiff = tailPos.y - (ballPos.y + ballRadius!);
         shape!.y += yDiff;
+        yDiff=min(yDiff,dTail.y);
         if (yDiff / dt < ballVelocity.y) {
           ballVelocity.y = 0.002 * yDiff / dt;
         }
