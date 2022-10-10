@@ -7,10 +7,11 @@ class Player {
   Shape? target;
   late Node tail;
   Vec2D tailPrevious = Vec2D();
-  int charge = 0;
+  double charge = 0;
   bool isCharging = false;
   double angle = 0;
   Vec2D targetSpawn = Vec2D();
   Vec2D ballSpawn = Vec2D();
+  Vec2D speed = Vec2D();
   late CustomRiveComponent component;
 }

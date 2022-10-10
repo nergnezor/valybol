@@ -87,7 +87,8 @@ void parseArtboard(Artboard a, Gamestate s) {
       switch (child.name) {
         case 'target':
           child = child as Shape;
-          (child as Shape).opacity = 0;
+          child.y += 200;
+          // child.opacity = 0;
           s.player?.target = child;
           s.player?.targetSpawn = child.worldTranslation;
           if (s.constraint == null) {

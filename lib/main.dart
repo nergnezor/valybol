@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:rive/math.dart';
+import 'package:valybol/player.dart';
 import 'gamestate.dart';
 import 'rivegame.dart';
 
@@ -42,22 +43,29 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     int activeIndex =
         (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
     gamestate.player = gamestate.players[activeIndex];
-    gamestate.player!.component.controller
-        .pointerDown(Vec2D.fromValues(200, 300));
+    // gamestate.player!.component.controller
+    //     .pointerDown(Vec2D.fromValues(200, 300));
   }
 
   @override
   void onTapUp(int pointerId, TapUpInfo info) {
     super.onTapUp(pointerId, info);
-    gamestate.player!.component.controller
-        .pointerUp(Vec2D.fromValues(200, 300));
+    print('on tap up');
+
+    // gamestate.player!.component.controller
+    //     .pointerUp(Vec2D.fromValues(200, 300));
   }
 
   @override
   void onDragEnd(int i, DragEndInfo info) {
     super.onDragEnd(i, info);
-    gamestate.player!.component.controller
-        .pointerUp(Vec2D.fromValues(200, 300));
+    gamestate.player?.isCharging = false;
+    double dir =
+        gamestate.players.indexOf(gamestate.player as Player) == 0 ? 1 : -1;
+    gamestate.ball.ballVelocity.x = 180 * dir;
+    print('falling');
+    // gamestate.player!.component.controller
+    //     .pointerUp(Vec2D.fromValues(200, 300));
   }
 
   @override
@@ -66,8 +74,8 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     // var target = gamestate.player?.target;
 
     if (info.delta.game.y > 0) {
-      // gamestate.player?.isCharging = true;
-      // ++gamestate.player?.charge;
+      gamestate.player?.isCharging = true;
+      gamestate.player?.charge += info.delta.game.y;
       gamestate.player?.target!.y += info.delta.game.y;
       // target!.x -= info.delta.game.y;
     }

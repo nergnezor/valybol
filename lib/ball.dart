@@ -19,6 +19,16 @@ class Ball {
     ballIsFalling = true;
     for (var p in s.players) {
       ++count;
+      if (p.charge > 0 && !p.isCharging) {
+        p.speed.y += 100 * dt;
+        p.speed.y = max(p.speed.y, 1000 * dt);
+        final dy = min(p.speed.y, p.charge);
+        p.target?.y -= dy;
+        p.charge -= dy;
+        if (p.charge <= 0) {
+          p.speed = Vec2D();
+        }
+      }
       Vec2D tailPos = p.tail.worldTranslation;
       if (count == 2) {
         tailPos.x += 300;
@@ -41,10 +51,6 @@ class Ball {
           ballVelocity.y = tailSpeed.y;
           ballVelocity.x = 0;
           ballIsFalling = false;
-        } else {
-          double dir = ballPos.x < s.court!.x / 2 ? 1 : -1;
-          ballVelocity.x = 180 * dir;
-          print('falling');
         }
       }
     }
