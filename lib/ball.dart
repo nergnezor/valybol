@@ -36,8 +36,8 @@ class Ball {
         tailSpeed.x *= dt;
         tailSpeed.y *= 0.8 / dt;
 
-        shape!.y -= d.y;
         if (tailSpeed.y <= ballVelocity.y) {
+          shape!.y -= d.y / 2;
           ballVelocity.y = tailSpeed.y;
           ballVelocity.x = 0;
           ballIsFalling = false;
