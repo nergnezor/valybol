@@ -34,7 +34,9 @@ class CustomRiveComponent extends RiveComponent with Tappable, Draggable {
     controller =
         StateMachineController.fromArtboard(artboard, 'State Machine 1')!;
 
+    bool? _levelInput = controller.findInput<bool>('dress')?.change(true);
     artboard.addController(controller);
+
     // if (gamestate.players.length == 2) {
     // }
     return super.onLoad();

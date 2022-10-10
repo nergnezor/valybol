@@ -28,27 +28,31 @@ class Ball {
       final d =
           ballPos + Vec2D.fromValues(ballRadius! / 2, ballRadius!) - tailPos;
       final dist = sqrt(d.x * d.x + d.y * d.y);
-      if (dist < ballRadius! * 2) {
-        if (d.y > 0) {
-          shape!.x -= 5 * d.x * dt;
-        }
+      if (d.y >= 0 && dist < ballRadius! * 2) {
+        // if (d.y > 0) {
+        shape!.x -= 5 * d.x * dt;
+        // }
         var tailSpeed = dTail;
         tailSpeed.x *= dt;
-        tailSpeed.y *= 70 * dt;
-        if (tailSpeed.y < ballVelocity.y) {
+        tailSpeed.y *= 0.8 / dt;
+        if (tailSpeed.y >= 0) {
+          // continue;
+        }
+        if (tailSpeed.y <= ballVelocity.y) {
           ballVelocity.y = tailSpeed.y;
           ballVelocity.x = 0;
           ballIsFalling = false;
           shape!.y -= d.y;
-        } else if (d.y < -ballRadius!) {
-          double dir = ballPos.x < s.court!.x / 2 ? 1 : -1;
-          ballVelocity.x = 3.8 * dir;
-          print('falling');
         }
+        // else if (d.y < -ballRadius!) {
+        //   double dir = ballPos.x < s.court!.x / 2 ? 1 : -1;
+        //   ballVelocity.x = 3.8 * dir;
+        //   print('falling');
+        // }
       }
     }
     if (ballIsFalling) {
-      ballVelocity.y += 30 * dt;
+      ballVelocity.y += 1000 * dt;
       if (ballPos.y > s.court!.y) {
         ballVelocity = Vec2D();
         s.ball.shape!.opacity -= 0.01;
@@ -58,7 +62,7 @@ class Ball {
         }
       }
     }
-    shape!.x += ballVelocity.x;
-    shape!.y += ballVelocity.y;
+    shape!.x += ballVelocity.x * dt;
+    shape!.y += ballVelocity.y * dt;
   }
 }
