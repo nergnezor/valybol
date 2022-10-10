@@ -35,20 +35,17 @@ class Ball {
         var tailSpeed = dTail;
         tailSpeed.x *= dt;
         tailSpeed.y *= 0.8 / dt;
-        if (tailSpeed.y >= 0) {
-          // continue;
-        }
+
+        shape!.y -= d.y;
         if (tailSpeed.y <= ballVelocity.y) {
           ballVelocity.y = tailSpeed.y;
           ballVelocity.x = 0;
           ballIsFalling = false;
-          shape!.y -= d.y;
+        } else {
+          double dir = ballPos.x < s.court!.x / 2 ? 1 : -1;
+          ballVelocity.x = 180 * dir;
+          print('falling');
         }
-        // else if (d.y < -ballRadius!) {
-        //   double dir = ballPos.x < s.court!.x / 2 ? 1 : -1;
-        //   ballVelocity.x = 3.8 * dir;
-        //   print('falling');
-        // }
       }
     }
     if (ballIsFalling) {
