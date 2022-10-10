@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame_rive/flame_rive.dart';
+// import 'package:flutter/material.dart';
 import 'package:rive/components.dart';
 import 'package:rive/math.dart';
 import 'package:rive/rive.dart';
@@ -53,7 +54,7 @@ Future<List<CustomRiveComponent>> loadRive(
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
   components.last.position.x += 300;
-  // gamestate.ball.shape!.x = gamestate.ball.ballSpawn.x;
+  gamestate.ball.shape!.x = gamestate.ball.ballSpawn.x;
 // gamestate.player.
   return components;
 }
@@ -80,7 +81,6 @@ void parseArtboard(Artboard a, Gamestate s) {
             final c = child.children.whereType<TranslationConstraint>().single;
             s.constraint =
                 Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-            return;
           }
           break;
         case 'rectangle':
@@ -93,7 +93,7 @@ void parseArtboard(Artboard a, Gamestate s) {
         case 'ball':
           s.ball.shape = child as Shape;
 
-          s.ball.ballSpawn.x = child.x + 60;
+          s.ball.ballSpawn.x = child.x + 40;
           s.ball.ballSpawn.y = child.y;
           break;
         case 'ball ellipse':
@@ -103,7 +103,14 @@ void parseArtboard(Artboard a, Gamestate s) {
           var c = child as RootBone;
           if (s.players.length.isEven) {
             c.scaleY *= -1;
-            // c.x += 300;
+            // final body =
+            //     c.children.where((e) => e.name == "body").single as Shape;
+            // final fill = body.children.whereType<Fill>().single as Fill;
+            // final e = fill.children.first as RadialGradient;
+            // // e.children.first as GradientStop
+            // print(body);
+            // .whereType<Fill>().single;
+            // fill.paint.color = Color.fromARGB(255, 255, 0, 255);
           }
           break;
       }

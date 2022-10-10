@@ -49,9 +49,6 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void onTapUp(int pointerId, TapUpInfo info) {
     super.onTapUp(pointerId, info);
-    // int activeIndex =
-    //     (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
-    // gamestate.player = gamestate.players[activeIndex];
     gamestate.player!.component.controller
         .pointerUp(Vec2D.fromValues(200, 300));
   }
@@ -59,25 +56,27 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   @override
   void onDragEnd(int i, DragEndInfo info) {
     super.onDragEnd(i, info);
-    gamestate.player?.isCharging = false;
+    gamestate.player!.component.controller
+        .pointerUp(Vec2D.fromValues(200, 300));
   }
 
   @override
   void onDragUpdate(int i, DragUpdateInfo info) {
     super.onDragUpdate(i, info);
-    var target = gamestate.player?.target;
+    // var target = gamestate.player?.target;
 
     if (info.delta.game.y > 0) {
-      gamestate.player?.isCharging = true;
-      ++gamestate.player?.charge;
-      target!.x -= info.delta.game.y;
+      // gamestate.player?.isCharging = true;
+      // ++gamestate.player?.charge;
+      gamestate.player?.target!.y += info.delta.game.y;
+      // target!.x -= info.delta.game.y;
     }
   }
 
   @override
   void update(double dt) {
-    gamestate.ball.update(dt, gamestate);
     super.update(dt);
+    gamestate.ball.update(dt, gamestate);
   }
 
   @override
