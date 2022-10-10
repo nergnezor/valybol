@@ -29,10 +29,12 @@ class Ball {
           ballPos + Vec2D.fromValues(ballRadius! / 2, ballRadius!) - tailPos;
       final dist = sqrt(d.x * d.x + d.y * d.y);
       if (dist < ballRadius! * 2) {
-        shape!.x -= 5 * d.x * dt;
+        if (d.y > 0) {
+          shape!.x -= 5 * d.x * dt;
+        }
         var tailSpeed = dTail;
-        tailSpeed.x *= 0.02 / dt;
-        tailSpeed.y *= 0.02 / dt;
+        tailSpeed.x *= dt;
+        tailSpeed.y *= 70 * dt;
         if (tailSpeed.y < ballVelocity.y) {
           ballVelocity.y = tailSpeed.y;
           ballVelocity.x = 0;
@@ -43,13 +45,6 @@ class Ball {
           ballVelocity.x = 3.8 * dir;
           print('falling');
         }
-        // if (dTail.y < 0) {
-        // if (ballVelocity.y > 0) {
-        //   ballVelocity.y = 0;
-        //   // continue;
-        // }
-        // yDiff = min(yDiff, dTail.y);
-        // }
       }
     }
     if (ballIsFalling) {
