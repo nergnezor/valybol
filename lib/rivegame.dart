@@ -15,23 +15,28 @@ import 'package:rive/src/rive_core/shapes/rectangle.dart';
 import 'package:rive/src/rive_core/shapes/ellipse.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
+import 'package:rive/src/rive_core/animation/state_machine_bool.dart';
 
 class CustomRiveComponent extends RiveComponent with Tappable, Draggable {
   @override
-  final Artboard artboard;
+  // final Artboard artboard;
   final Gamestate gamestate;
 
-  CustomRiveComponent(this.artboard, this.gamestate)
+  CustomRiveComponent(artboard, this.gamestate)
       : super(
             artboard: artboard, size: Vector2(artboard.width, artboard.height));
   late StateMachineController controller;
+  // late OneShotAnimation ani;
   late Fill fill;
 
   @override
   Future<void>? onLoad() {
     controller =
         StateMachineController.fromArtboard(artboard, 'State Machine 1')!;
+
     artboard.addController(controller);
+    // if (gamestate.players.length == 2) {
+    // }
     return super.onLoad();
   }
 }
@@ -55,6 +60,12 @@ Future<List<CustomRiveComponent>> loadRive(
   await addPlayer(size, gamestate, components);
   components.last.position.x += 300;
   gamestate.ball.shape!.x = gamestate.ball.ballSpawn.x;
+  // var e = components.last..stateMachine.inputs
+  //     .where((element) => element.name == "dress")
+  //     .single;
+  // components.last.ani = OneShotAnimation('dress', autoplay: true);
+
+  // components.last.artboard.addController(components.last.ani);
 // gamestate.player.
   return components;
 }
