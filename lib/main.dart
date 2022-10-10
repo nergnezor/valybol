@@ -80,6 +80,20 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
       // target!.x -= info.delta.game.y;
     }
   }
+@override
+  void onDragStart(int i, DragStartInfo info) {
+    super.onDragStart(i, info);
+    // var target = gamestate.player?.target;
+int activeIndex =
+        (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
+    gamestate.player = gamestate.players[activeIndex];
+    if (info.delta.game.y > 0) {
+      gamestate.player?.isCharging = true;
+      gamestate.player?.charge += info.delta.game.y;
+      gamestate.player?.target!.y += info.delta.game.y;
+      // target!.x -= info.delta.game.y;
+    }
+  }
 
   @override
   void update(double dt) {
