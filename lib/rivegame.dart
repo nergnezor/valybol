@@ -17,7 +17,7 @@ import 'package:rive/src/rive_core/shapes/ellipse.dart';
 import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
 import 'package:rive/src/rive_core/animation/state_machine_bool.dart';
 
-class CustomRiveComponent extends RiveComponent with Tappable, Draggable {
+class CustomRiveComponent extends RiveComponent with Draggable {
   @override
   // final Artboard artboard;
   final Gamestate gamestate;
@@ -115,6 +115,7 @@ void parseArtboard(Artboard a, Gamestate s) {
           break;
         case 'val':
           var c = child as RootBone;
+          s.player?.rootBone = child;
           if (s.players.length.isEven) {
             c.scaleY *= -1;
             // final body =

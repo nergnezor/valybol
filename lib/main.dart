@@ -24,7 +24,7 @@ void main() {
   }
 }
 
-class MyGame extends FlameGame with HasTappables, HasDraggables {
+class MyGame extends FlameGame with HasDraggables {
   Gamestate gamestate = Gamestate();
 
   @override
@@ -38,79 +38,36 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
 
   @override
-  void onTapDown(int pointerId, TapDownInfo info) {
-    
-    int activeIndex =
-        (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
-    gamestate.player = gamestate.players[activeIndex];
-      gamestate.player?.target!.y += 20;
-
-    // gamestate.player!.component.controller
-    //     .pointerDown(Vec2D.fromValues(200, 300));
-    super.onTapDown(pointerId, info);
-  }
-
-  @override
-  void onTapUp(int pointerId, TapUpInfo info) {
-    super.onTapUp(pointerId, info);
-    print('on tap up');
-
-    // gamestate.player!.component.controller
-    //     .pointerUp(Vec2D.fromValues(200, 300));
-  }
-
-  @override
   void onDragEnd(int i, DragEndInfo info) {
     super.onDragEnd(i, info);
     gamestate.player?.isCharging = false;
     double dir =
         gamestate.players.indexOf(gamestate.player as Player) == 0 ? 1 : -1;
     gamestate.ball.ballVelocity.x = 180 * dir;
-    print('falling');
-    // gamestate.player!.component.controller
-    //     .pointerUp(Vec2D.fromValues(200, 300));
-  }
- @override
-  void onDragStart(int i, DragStartInfo info) {
-      super.onDragStart(i, info);
-    
   }
 
   @override
-  void onDragUpdate(int i, DragUpdateInfo info) {
-   
-    // var target = gamestate.player?.target;
+  void onDragStart(int i, DragStartInfo info) {
+    int activeIndex =
+        (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
+    gamestate.player = gamestate.players[activeIndex];
 
+    super.onDragStart(i, info);
+  }
+
+  @override
+  void onDragUpdate(int pointerId, DragUpdateInfo info) {
     if (info.delta.game.y >= 0) {
       gamestate.player?.isCharging = true;
       gamestate.player?.charge += info.delta.game.y;
       gamestate.player?.target!.y += info.delta.game.y;
     }
-     super.onDragUpdate(i, info);
+    super.onDragUpdate(pointerId, info);
   }
-
 
   @override
   void update(double dt) {
-    
     gamestate.ball.update(dt, gamestate);
     super.update(dt);
-  }
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    // _drawVerticalLines(canvas);
-  }
-
-  void _drawVerticalLines(Canvas c) {
-    for (var p in gamestate.players) {
-      final offset = p.component.toRect();
-      final current =
-          Offset(p.target!.worldTranslation.x, p.target!.worldTranslation.y) +
-              offset.topLeft;
-      final target = Offset(p.targetSpawn.x, p.targetSpawn.y);
-      c.drawLine(current, target, Paint()..color = Colors.red);
-    }
   }
 }
