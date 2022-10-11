@@ -40,6 +40,7 @@ class Ball {
       final dist = sqrt(d.x * d.x + d.y * d.y);
       if (d.y >= 0 && dist < ballRadius! * 2) {
         // if (d.y > 0) {
+        ballVelocity.x *= 0.98;
         shape!.x -= 5 * d.x * dt;
         // }
         var tailSpeed = dTail;
@@ -49,7 +50,6 @@ class Ball {
         if (tailSpeed.y <= ballVelocity.y) {
           shape!.y -= d.y / 2;
           ballVelocity.y = tailSpeed.y;
-          ballVelocity.x = 0;
           ballIsFalling = false;
         }
       }

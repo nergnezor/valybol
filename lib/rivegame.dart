@@ -16,6 +16,7 @@ import 'package:rive/src/rive_core/shapes/ellipse.dart';
 // ignore: implementation_imports
 import 'package:rive/src/rive_core/constraints/translation_constraint.dart';
 import 'package:rive/src/rive_core/animation/state_machine_bool.dart';
+import 'package:valybol/settings.dart';
 
 class CustomRiveComponent extends RiveComponent with Draggable {
   @override
@@ -88,7 +89,9 @@ void parseArtboard(Artboard a, Gamestate s) {
         case 'target':
           child = child as Shape;
           child.y += 200;
-          // child.opacity = 0;
+          if (!Settings.showTargets) {
+            child.opacity = 0;
+          }
           s.player?.target = child;
           s.player?.targetSpawn = child.worldTranslation;
           if (s.constraint == null) {
