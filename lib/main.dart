@@ -39,12 +39,15 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
 
   @override
   void onTapDown(int pointerId, TapDownInfo info) {
-    super.onTapDown(pointerId, info);
+    
     int activeIndex =
         (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
     gamestate.player = gamestate.players[activeIndex];
+      gamestate.player?.target!.y += 20;
+
     // gamestate.player!.component.controller
     //     .pointerDown(Vec2D.fromValues(200, 300));
+    super.onTapDown(pointerId, info);
   }
 
   @override
@@ -69,8 +72,7 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
   }
  @override
   void onDragStart(int i, DragStartInfo info) {
-    gamestate.player?.target!.y += 20;
-    super.onDragStart(i, info);
+      super.onDragStart(i, info);
     
   }
 
