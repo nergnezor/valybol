@@ -16,12 +16,12 @@ class Ball {
     }
     Vec2D ballPos = shape!.worldTranslation;
     var count = 0;
-    ballIsFalling = true;
+    // ballIsFalling = true;
     for (var p in s.players) {
       ++count;
       if (p.charge > 0 && !p.isCharging) {
-        p.speed.y += 100 * dt;
-        p.speed.y = max(p.speed.y, 1000 * dt);
+        p.speed.y += 200 * dt;
+        // p.speed.y = max(p.speed.y, 1000 * dt);
         final dy = min(p.speed.y, p.charge);
         p.target?.y -= dy;
         p.charge -= dy;
@@ -50,7 +50,7 @@ class Ball {
         if (tailSpeed.y <= ballVelocity.y) {
           shape!.y -= d.y / 2;
           ballVelocity.y = tailSpeed.y;
-          ballIsFalling = false;
+          // ballIsFalling = false;
         }
       }
     }

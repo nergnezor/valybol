@@ -37,7 +37,7 @@ class CustomRiveComponent extends RiveComponent with Draggable {
 
     bool? _levelInput = controller.findInput<bool>('dress')?.change(true);
     artboard.addController(controller);
-
+    gamestate.riveLoaded = true;
     // if (gamestate.players.length == 2) {
     // }
     return super.onLoad();

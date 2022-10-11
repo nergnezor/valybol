@@ -9,4 +9,5 @@ class Gamestate {
   Player? player;
   Rect? constraint;
   Vec2D? court;
+  bool riveLoaded = false;
 }
