@@ -67,7 +67,7 @@ class MyGame extends FlameGame with HasDraggables {
       p.charge += info.delta.game.y;
       p.target!.y += info.delta.game.y;
 
-      p.angle -= info.delta.game.x;
+      p.angle += info.delta.game.x;
       p.rootBone.rotation += info.delta.game.x / 100;
       // p.rootBone.rotation = p.angle;
     }
