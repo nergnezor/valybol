@@ -67,25 +67,32 @@ class MyGame extends FlameGame with HasTappables, HasDraggables {
     // gamestate.player!.component.controller
     //     .pointerUp(Vec2D.fromValues(200, 300));
   }
+ @override
+  void onDragStart(int i, DragStartInfo info) {
+    gamestate.player?.target!.y += 20;
+    super.onDragStart(i, info);
+    
+  }
 
   @override
   void onDragUpdate(int i, DragUpdateInfo info) {
-    super.onDragUpdate(i, info);
+   
     // var target = gamestate.player?.target;
 
     if (info.delta.game.y >= 0) {
       gamestate.player?.isCharging = true;
       gamestate.player?.charge += info.delta.game.y;
       gamestate.player?.target!.y += info.delta.game.y;
-      // target!.x -= info.delta.game.y;
     }
+     super.onDragUpdate(i, info);
   }
 
 
   @override
   void update(double dt) {
-    super.update(dt);
+    
     gamestate.ball.update(dt, gamestate);
+    super.update(dt);
   }
 
   @override
