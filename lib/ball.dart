@@ -41,7 +41,7 @@ class Ball {
       if (d.y >= 0 && dist < ballRadius! * 2) {
         // if (d.y > 0) {
         ballVelocity.x *= 0.98;
-        shape!.x -= 5 * d.x * dt;
+        shape!.x -= 50 * d.x * dt;
         // }
         var tailSpeed = dTail;
         tailSpeed.x *= dt;
