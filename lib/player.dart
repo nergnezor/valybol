@@ -10,7 +10,7 @@ class Player {
   Vec2D tailPrevious = Vec2D();
   double charge = 0;
   bool isCharging = false;
-  double angle = 0;
+  double xFactor = 0;
   Vec2D targetSpawn = Vec2D();
   Vec2D ballSpawn = Vec2D();
   Vec2D speed = Vec2D();

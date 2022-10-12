@@ -19,19 +19,17 @@ class Ball {
     // ballIsFalling = true;
     for (var p in s.players) {
       ++count;
-      if (p.charge > 0 && !p.isCharging) {
-        p.speed.y += 200 * dt;
-        // p.speed.y = max(p.speed.y, 1000 * dt);
-        final dy = min(p.speed.y, p.charge);
-        p.target?.y -= dy;
-        p.charge -= dy;
-        if (p.charge <= 0) {
-          p.speed = Vec2D();
-        }
-      }
       Vec2D tailPos = p.tail.worldTranslation;
       if (count == 2) {
-        tailPos.x += 300;
+        // tailPos.x += 300;
+      }
+      final dTarget = p.targetSpawn - p.target!.translation;
+      if (dTarget.y < 0 && !p.isCharging) {
+        p.speed.y += 0.11 * dTarget.y * dt;
+        p.speed.x = 10 * cos(dTarget.x / dTarget.y) * dt;
+        print(p.speed.x);
+        p.target?.y += p.speed.y;
+        p.target?.x += p.speed.x;
       }
       final dTail = tailPos - p.tailPrevious;
       p.tailPrevious = tailPos;

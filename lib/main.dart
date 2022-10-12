@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Draggable;
 import 'package:flame/game.dart';
@@ -23,59 +24,58 @@ void main() {
 }
 
 class MyGame extends FlameGame with HasDraggables {
-  Gamestate gamestate = Gamestate();
+  Gamestate g = Gamestate();
 
   @override
   Color backgroundColor() => const Color(0xff471717);
 
   @override
   Future<void> onLoad() async {
-    final components = await loadRive(size, gamestate);
+    final components = await loadRive(size, g);
     addAll(components);
     await super.onLoad();
   }
 
   @override
   void onDragEnd(int pointerId, DragEndInfo info) {
-    gamestate.player?.isCharging = false;
-    // gamestate.ball.ballVelocity.x = gamestate.player!.angle * 2;
-    print(gamestate.player!.angle);
+    g.player?.isCharging = false;
+    // final d = g.player!.target!.translation - g.player!.targetSpawn;
+    // if (!d.x.isNaN) g.player!.xFactor = acos(d.y / d.x);
+    // print(g.player!.xFactor);
     super.onDragEnd(pointerId, info);
-    gamestate.ball.ballIsFalling = true;
+    g.ball.ballIsFalling = true;
   }
 
   @override
   void onDragStart(int pointerId, DragStartInfo info) {
     int activeIndex =
         (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
-    gamestate.player = gamestate.players[activeIndex];
-
+    g.player = g.players[activeIndex];
+    g.player?.xFactor = 0;
+    g.player?.targetSpawn = g.player!.target!.translation;
     super.onDragStart(pointerId, info);
   }
 
   @override
   void onDragUpdate(int pointerId, DragUpdateInfo info) {
-    final p = gamestate.player;
+    final p = g.player;
     p?.target!.x += info.delta.game.x;
     if (info.delta.game.y >= 0) {
       p?.isCharging = true;
       p?.charge += info.delta.game.y;
       p?.target!.y += info.delta.game.y;
 
-      p?.angle += info.delta.game.x;
+      // p?.angle += info.delta.game.x;
       // p.rootBone.rotation += info.delta.game.x / 100;
     }
-    p?.target?.y = p.target!.y
-        .clamp(gamestate.constraint!.top, gamestate.constraint!.bottom);
-    p?.target?.x = p.target!.x
-        .clamp(gamestate.constraint!.left, gamestate.constraint!.right);
-    print(p?.angle);
+    p?.target?.y = p.target!.y.clamp(g.constraint!.top, g.constraint!.bottom);
+    p?.target?.x = p.target!.x.clamp(g.constraint!.left, g.constraint!.right);
     super.onDragUpdate(pointerId, info);
   }
 
   @override
   void update(double dt) {
-    gamestate.ball.update(dt, gamestate);
+    g.ball.update(dt, g);
     super.update(dt);
   }
 }
