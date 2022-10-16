@@ -19,14 +19,10 @@ class Ball {
     // ballIsFalling = true;
     for (var p in g.players) {
       ++count;
-      Vec2D tailPos = p.tail!.worldTranslation;
-      if (count == 2) {
-        // tailPos.x += 300;
-      }
       final dTarget = p.target!.translation - p.targetSpawn;
       print(dTarget);
-      if (dTarget.y < 0 && !p.isCharging) {
-        p.speed.y += 0.11 * dTarget.y * dt;
+      if (dTarget.y > 0 && !p.isCharging) {
+        p.speed.y -= 0.11 * dTarget.y * dt;
         // p.speed.x = 10 * cos(dTarget.x / dTarget.y) * dt;
         p.target?.y += p.speed.y;
         p.target?.x += p.speed.x;
@@ -35,6 +31,7 @@ class Ball {
         p.target?.x =
             p.target!.x.clamp(g.constraint!.left, g.constraint!.right);
       }
+      Vec2D tailPos = p.tail!.worldTranslation;
       final dTail = tailPos - p.tailPrevious;
       p.tailPrevious = tailPos;
       final d =
