@@ -20,10 +20,9 @@ class Ball {
     for (var p in g.players) {
       ++count;
       final dTarget = p.target!.translation - p.targetSpawn;
-      print(dTarget);
       if (dTarget.y > 0 && !p.isCharging) {
-        p.speed.y -= 0.11 * dTarget.y * dt;
-        // p.speed.x = 10 * cos(dTarget.x / dTarget.y) * dt;
+        p.speed.y -= 100 * dt;
+        p.speed.x = -p.speed.y * p.xFactor;
         p.target?.y += p.speed.y;
         p.target?.x += p.speed.x;
         p.target?.y =

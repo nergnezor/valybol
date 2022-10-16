@@ -39,8 +39,9 @@ class MyGame extends FlameGame with HasDraggables {
   @override
   void onDragEnd(int pointerId, DragEndInfo info) {
     g.player?.isCharging = false;
-    // final d = g.player!.target!.translation - g.player!.targetSpawn;
-    // if (!d.x.isNaN) g.player!.xFactor = acos(d.y / d.x);
+    final d = g.player!.target!.translation - g.player!.targetSpawn;
+    if (!d.x.isNaN) g.player!.xFactor = d.x / d.y;
+    g.player!.speed.y = 0;
     // print(g.player!.xFactor);
     super.onDragEnd(pointerId, info);
     g.ball.ballIsFalling = true;
