@@ -52,7 +52,7 @@ class MyGame extends FlameGame with HasDraggables {
         (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
     g.player = g.players[activeIndex];
     g.player?.xFactor = 0;
-    g.player?.targetSpawn = g.player!.target!.translation;
+
     super.onDragStart(pointerId, info);
   }
 
@@ -77,5 +77,22 @@ class MyGame extends FlameGame with HasDraggables {
   void update(double dt) {
     g.ball.update(dt, g);
     super.update(dt);
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    // _drawVerticalLines(canvas);
+  }
+
+  void _drawVerticalLines(Canvas c) {
+    for (var p in g.players) {
+      var offset = p.component.toRect();
+      offset = offset.translate(47, 128);
+      final current = Offset(p.target!.x, p.target!.y) + offset.topLeft;
+      final target = Offset(p.targetSpawn.x, p.targetSpawn.y) + offset.topLeft;
+      c.drawLine(current, target, Paint()..color = Colors.red);
+      c.drawCircle(target, 10, Paint()..color = Colors.red);
+    }
   }
 }

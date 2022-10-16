@@ -6,7 +6,7 @@ import 'package:rive/src/rive_core/bones/root_bone.dart';
 
 class Player {
   Shape? target;
-  late Node tail;
+  Node? tail;
   Vec2D tailPrevious = Vec2D();
   double charge = 0;
   bool isCharging = false;
@@ -15,5 +15,5 @@ class Player {
   Vec2D ballSpawn = Vec2D();
   Vec2D speed = Vec2D();
   late CustomRiveComponent component;
-  RootBone rootBone = RootBone();
+  RootBone? rootBone;
 }

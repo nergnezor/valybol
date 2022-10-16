@@ -38,6 +38,7 @@ class CustomRiveComponent extends RiveComponent with Draggable {
     bool? _levelInput = controller.findInput<bool>('dress')?.change(true);
     artboard.addController(controller);
     gamestate.riveLoaded = true;
+    parseArtboard(artboard, gamestate);
     // if (gamestate.players.length == 2) {
     // }
     return super.onLoad();
@@ -50,7 +51,6 @@ Future<CustomRiveComponent> addRiveArtboard(
   final component = CustomRiveComponent(artboard, gamestate);
   component.position.x = (size.x - artboard.width) / 2;
   component.position.y = (size.y - artboard.height) / 2;
-  parseArtboard(artboard, gamestate);
   return component;
 }
 
@@ -61,8 +61,8 @@ Future<List<CustomRiveComponent>> loadRive(
   components.add(c);
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
-  components.last.position.x += 300;
-  gamestate.ball.shape!.x = gamestate.ball.ballSpawn.x;
+  // components.last.position.x += 300;
+  // gamestate.ball.shape!.x = gamestate.ball.ballSpawn.x;
   // var e = components.last..stateMachine.inputs
   //     .where((element) => element.name == "dress")
   //     .single;
@@ -70,6 +70,7 @@ Future<List<CustomRiveComponent>> loadRive(
 
   // components.last.artboard.addController(components.last.ani);
 // gamestate.player.
+
   return components;
 }
 
@@ -82,56 +83,52 @@ Future<void> addPlayer(
   components.add(player.component);
 }
 
+int playerCount = 0;
 void parseArtboard(Artboard a, Gamestate s) {
-  {
-    a.forEachComponent((child) {
-      switch (child.name) {
-        case 'target':
-          child = child as Shape;
-          child.y += 200;
-          if (!Settings.showTargets) {
-            child.opacity = 0;
-          }
-          s.player?.target = child;
-          s.player?.targetSpawn = child.worldTranslation;
-          if (s.constraint == null) {
-            final c = child.children.whereType<TranslationConstraint>().single;
-            s.constraint =
-                Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-          }
-          break;
-        case 'rectangle':
-          child = child as Rectangle;
-          s.court = Vec2D.fromValues(child.width, child.height);
-          break;
-        case 'tail':
-          s.player?.tail = child as Node;
-          break;
-        case 'ball':
-          s.ball.shape = child as Shape;
+  s.player = s.players[playerCount];
+  a.forEachComponent((child) {
+    switch (child.name) {
+      case 'target':
+        child = child as Shape;
+        // child.y += 200;
+        if (!Settings.showTargets) {
+          child.opacity = 0;
+        }
+        s.player?.target = child;
+        if (s.constraint == null) {
+          final c = child.children.whereType<TranslationConstraint>().single;
+          s.constraint =
+              Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
+        }
+        break;
+      case 'rectangle':
+        child = child as Rectangle;
+        s.court = Vec2D.fromValues(child.width, child.height);
+        break;
+      case 'tail':
+        s.player?.tail = child as Node;
+        break;
+      case 'ball':
+        s.ball.shape = child as Shape;
 
-          s.ball.ballSpawn.x = child.x + 40;
-          s.ball.ballSpawn.y = child.y;
-          break;
-        case 'ball ellipse':
-          s.ball.ballRadius = (child as Ellipse).radiusX;
-          break;
-        case 'val':
-          var c = child as RootBone;
-          s.player?.rootBone = child;
-          if (s.players.length.isEven) {
-            c.scaleY *= -1;
-            // final body =
-            //     c.children.where((e) => e.name == "body").single as Shape;
-            // final fill = body.children.whereType<Fill>().single as Fill;
-            // final e = fill.children.first as RadialGradient;
-            // // e.children.first as GradientStop
-            // print(body);
-            // .whereType<Fill>().single;
-            // fill.paint.color = Color.fromARGB(255, 255, 0, 255);
-          }
-          break;
-      }
-    });
+        s.ball.ballSpawn.x = child.x + 40;
+        s.ball.ballSpawn.y = child.y;
+        break;
+      case 'ball ellipse':
+        s.ball.ballRadius = (child as Ellipse).radiusX;
+        break;
+      case 'val':
+        s.player?.rootBone = child as RootBone;
+        break;
+    }
+  });
+
+  if (a.name == 'whale') {
+    playerCount++;
+    if (playerCount == 2) {
+      s.player?.component.x += 300;
+    }
+    s.player?.targetSpawn =
+        s.player!.target!.translation; // + Vec2D.fromValues(50, 120);
   }
 }

@@ -10,26 +10,30 @@ class Ball {
   bool ballIsFalling = true; //
   double? ballRadius;
 
-  void update(double dt, Gamestate s) {
+  void update(double dt, Gamestate g) {
     if (shape == null) {
       return;
     }
     Vec2D ballPos = shape!.worldTranslation;
     var count = 0;
     // ballIsFalling = true;
-    for (var p in s.players) {
+    for (var p in g.players) {
       ++count;
-      Vec2D tailPos = p.tail.worldTranslation;
+      Vec2D tailPos = p.tail!.worldTranslation;
       if (count == 2) {
         // tailPos.x += 300;
       }
-      final dTarget = p.targetSpawn - p.target!.translation;
+      final dTarget = p.target!.translation - p.targetSpawn;
+      print(dTarget);
       if (dTarget.y < 0 && !p.isCharging) {
         p.speed.y += 0.11 * dTarget.y * dt;
-        p.speed.x = 10 * cos(dTarget.x / dTarget.y) * dt;
-        print(p.speed.x);
+        // p.speed.x = 10 * cos(dTarget.x / dTarget.y) * dt;
         p.target?.y += p.speed.y;
         p.target?.x += p.speed.x;
+        p.target?.y =
+            p.target!.y.clamp(g.constraint!.top, g.constraint!.bottom);
+        p.target?.x =
+            p.target!.x.clamp(g.constraint!.left, g.constraint!.right);
       }
       final dTail = tailPos - p.tailPrevious;
       p.tailPrevious = tailPos;
@@ -39,7 +43,7 @@ class Ball {
       if (d.y >= 0 && dist < ballRadius! * 2) {
         // if (d.y > 0) {
         ballVelocity.x *= 0.98;
-        shape!.x -= 50 * d.x * dt;
+        if (d.x.abs() > 5) shape!.x -= 50 * d.x * dt;
         // }
         var tailSpeed = dTail;
         tailSpeed.x *= dt;
@@ -54,12 +58,12 @@ class Ball {
     }
     if (ballIsFalling) {
       ballVelocity.y += 1000 * dt;
-      if (ballPos.y > s.court!.y) {
+      if (ballPos.y > g.court!.y) {
         ballVelocity = Vec2D();
-        s.ball.shape!.opacity -= 0.01;
-        if (s.ball.shape!.opacity <= 0) {
-          s.ball.shape!.opacity = 1;
-          s.ball.shape!.translation = s.ball.ballSpawn;
+        g.ball.shape!.opacity -= 0.01;
+        if (g.ball.shape!.opacity <= 0) {
+          g.ball.shape!.opacity = 1;
+          g.ball.shape!.translation = g.ball.ballSpawn;
         }
       }
     }
