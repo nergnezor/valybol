@@ -42,9 +42,7 @@ class MyGame extends FlameGame with HasDraggables {
     final d = g.player!.target!.translation - g.player!.targetSpawn;
     if (!d.x.isNaN) g.player!.xFactor = d.x / d.y;
     g.player!.speed.y = 0;
-    // print(g.player!.xFactor);
     super.onDragEnd(pointerId, info);
-    g.ball.ballIsFalling = true;
   }
 
   @override
@@ -65,9 +63,6 @@ class MyGame extends FlameGame with HasDraggables {
       p?.isCharging = true;
       p?.charge += info.delta.game.y;
       p?.target!.y += info.delta.game.y;
-
-      // p?.angle += info.delta.game.x;
-      // p.rootBone.rotation += info.delta.game.x / 100;
     }
     p?.target?.y = p.target!.y.clamp(g.constraint!.top, g.constraint!.bottom);
     p?.target?.x = p.target!.x.clamp(g.constraint!.left, g.constraint!.right);

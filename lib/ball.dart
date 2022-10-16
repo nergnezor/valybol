@@ -14,41 +14,43 @@ class Ball {
     if (shape == null) {
       return;
     }
+    ballIsFalling = true; //
     Vec2D ballPos = shape!.worldTranslation;
-    var count = 0;
-    // ballIsFalling = true;
     for (var p in g.players) {
-      ++count;
       final dTarget = p.target!.translation - p.targetSpawn;
-      if (dTarget.y > 0 && !p.isCharging) {
-        p.speed.y -= 100 * dt;
-        p.speed.x = -p.speed.y * p.xFactor;
-        p.target?.y += p.speed.y;
-        p.target?.x += p.speed.x;
-        p.target?.y =
-            p.target!.y.clamp(g.constraint!.top, g.constraint!.bottom);
-        p.target?.x =
-            p.target!.x.clamp(g.constraint!.left, g.constraint!.right);
-      }
+      // if (dTarget.y > 0 && !p.isCharging) {
+      //   p.speed.y -= 100 * dt;
+      //   p.speed.x = -p.speed.y * p.xFactor;
+      //   p.target?.y += p.speed.y;
+      //   p.target?.x += p.speed.x;
+      //   p.target?.y =
+      //       p.target!.y.clamp(g.constraint!.top, g.constraint!.bottom);
+      //   p.target?.x =
+      //       p.target!.x.clamp(g.constraint!.left, g.constraint!.right);
+      // }
       Vec2D tailPos = p.tail!.worldTranslation;
+      if (tailPos == Vec2D()) continue;
       final dTail = tailPos - p.tailPrevious;
       p.tailPrevious = tailPos;
-      final d =
-          ballPos + Vec2D.fromValues(ballRadius! / 2, ballRadius!) - tailPos;
-      final dist = sqrt(d.x * d.x + d.y * d.y);
-      if (d.y >= 0 && dist < ballRadius! * 2) {
-        // if (d.y > 0) {
-        ballVelocity.x *= 0.98;
-        if (d.x.abs() > 5) shape!.x -= 50 * d.x * dt;
+      final d = ballPos + Vec2D.fromValues(ballRadius!, ballRadius!) - tailPos;
+      // final dist = sqrt(d.x * d.x + d.y * d.y);
+      if (d.y > 0 && d.x.abs() < ballRadius! * 2) {
+        shape!.y -= d.y;
+        // if (ballIsFalling) {
+        //   ballVelocity = Vec2D();
+        // ballIsFalling = false;
         // }
+        // if (d.y > 0) {
+        //   ballVelocity.x *= 0.98;
+        //   if (d.x.abs() > 5) shape!.x -= 50 * d.x * dt;
+        //   // }
         var tailSpeed = dTail;
         tailSpeed.x *= dt;
         tailSpeed.y *= 0.8 / dt;
 
         if (tailSpeed.y <= ballVelocity.y) {
-          shape!.y -= d.y / 2;
+          ballIsFalling = false;
           ballVelocity.y = tailSpeed.y;
-          // ballIsFalling = false;
         }
       }
     }
