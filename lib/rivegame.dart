@@ -111,11 +111,11 @@ void parseArtboard(Artboard a, Gamestate s) {
       case 'ball':
         s.ball.shape = child as Shape;
 
-        s.ball.ballSpawn.x = child.x + 40;
-        s.ball.ballSpawn.y = child.y;
+        s.ball.spawn.x = child.x + 40;
+        s.ball.spawn.y = child.y;
         break;
       case 'ball ellipse':
-        s.ball.ballRadius = (child as Ellipse).radiusX;
+        s.ball.radius = (child as Ellipse).radiusX;
         break;
       case 'val':
         s.player?.rootBone = child as RootBone;
