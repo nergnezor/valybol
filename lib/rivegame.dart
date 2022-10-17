@@ -77,7 +77,7 @@ void parseArtboard(Artboard a, Gamestate s) {
   a.forEachComponent((child) {
     switch (child.name) {
       case 'target':
-        child = child as Shape;
+        child = child as Node;
         // child.y += 200;
         if (!Settings.showTargets) {
           child.opacity = 0;
@@ -86,7 +86,7 @@ void parseArtboard(Artboard a, Gamestate s) {
         final c = child.children.whereType<TranslationConstraint>().single;
         s.player?.constraint =
             Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-        c.strength = 0;
+        // c.strength = 0;
         break;
       case 'rectangle':
         child = child as Rectangle;
@@ -112,20 +112,24 @@ void parseArtboard(Artboard a, Gamestate s) {
 
   if (a.name == 'whale') {
     playerCount++;
-    s.player?.component.x -= 50;
+    s.player?.rootBone?.x -= 150;
     if (playerCount == 2) {
-      s.player?.component.x += a.width / 2;
+      // s.player?.rootBone?.x -= 250;
+      s.player?.component.x += a.width;
+      s.player?.component.flipHorizontally();
+
       // s.player?.component.scale.x = -1;
-      s.player?.rootBone?.scaleY *= -1;
+      // s.player?.rootBone?.scaleY *= -1;
       // s.player?.target?.x *= -1;
-      s.player?.constraint = Rect.fromLTRB(
-          s.player!.constraint!.left - 50,
-          s.player!.constraint!.top,
-          s.player!.constraint!.right - 50,
-          s.player!.constraint!.bottom);
+      // s.player?.constraint = Rect.fromLTRB(
+      //     s.player!.constraint!.left - 50,
+      //     s.player!.constraint!.top,
+      //     s.player!.constraint!.right - 50,
+      //     s.player!.constraint!.bottom);
       s.player?.invertX = true;
       // s.player?.constraint.
-    }
+      // s.player?.rootBone?.x += 150;
+    } else {}
     s.player?.targetSpawn =
         s.player!.target!.translation; // + Vec2D.fromValues(50, 120);
   }

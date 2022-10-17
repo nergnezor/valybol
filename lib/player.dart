@@ -7,7 +7,7 @@ import 'package:valybol/rivegame.dart';
 import 'package:rive/src/rive_core/bones/root_bone.dart';
 
 class Player {
-  Shape? target;
+  Node? target;
   Node? tail;
   Vec2D tailPrevious = Vec2D();
   double charge = 0;

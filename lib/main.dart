@@ -58,11 +58,11 @@ class MyGame extends FlameGame with HasDraggables {
   @override
   void onDragUpdate(int pointerId, DragUpdateInfo info) {
     final p = g.player;
-    p?.target!.x += info.delta.game.x;
+    p?.target!.y += info.delta.game.x;
     if (info.delta.game.y >= 0) {
       p?.isCharging = true;
       p?.charge += info.delta.game.y;
-      p?.target!.y += info.delta.game.y;
+      p?.target!.x -= info.delta.game.y;
     }
     print(p?.target?.x);
     p?.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
