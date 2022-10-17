@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:rive/components.dart';
 import 'package:rive/math.dart';
 import 'package:rive/rive.dart';
@@ -16,4 +18,6 @@ class Player {
   Vec2D speed = Vec2D();
   late CustomRiveComponent component;
   RootBone? rootBone;
+  bool invertX = false;
+  Rect? constraint;
 }

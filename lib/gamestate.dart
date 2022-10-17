@@ -7,7 +7,5 @@ class Gamestate {
   List<Player> players = <Player>[];
   Ball ball = Ball();
   Player? player;
-  Rect? constraint;
   Vec2D? court;
-  bool riveLoaded = false;
 }

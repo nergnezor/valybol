@@ -37,10 +37,7 @@ class CustomRiveComponent extends RiveComponent with Draggable {
 
     bool? _levelInput = controller.findInput<bool>('dress')?.change(true);
     artboard.addController(controller);
-    gamestate.riveLoaded = true;
     parseArtboard(artboard, gamestate);
-    // if (gamestate.players.length == 2) {
-    // }
     return super.onLoad();
   }
 }
@@ -61,15 +58,6 @@ Future<List<CustomRiveComponent>> loadRive(
   components.add(c);
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
-  // components.last.position.x += 300;
-  // gamestate.ball.shape!.x = gamestate.ball.ballSpawn.x;
-  // var e = components.last..stateMachine.inputs
-  //     .where((element) => element.name == "dress")
-  //     .single;
-  // components.last.ani = OneShotAnimation('dress', autoplay: true);
-
-  // components.last.artboard.addController(components.last.ani);
-// gamestate.player.
 
   return components;
 }
@@ -95,11 +83,10 @@ void parseArtboard(Artboard a, Gamestate s) {
           child.opacity = 0;
         }
         s.player?.target = child;
-        if (s.constraint == null) {
-          final c = child.children.whereType<TranslationConstraint>().single;
-          s.constraint =
-              Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-        }
+        final c = child.children.whereType<TranslationConstraint>().single;
+        s.player?.constraint =
+            Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
+        c.strength = 0;
         break;
       case 'rectangle':
         child = child as Rectangle;
@@ -111,7 +98,7 @@ void parseArtboard(Artboard a, Gamestate s) {
       case 'ball':
         s.ball.shape = child as Shape;
 
-        s.ball.spawn.x = child.x + 40;
+        s.ball.spawn.x = child.x + 300;
         s.ball.spawn.y = child.y;
         break;
       case 'ball ellipse':
@@ -125,8 +112,19 @@ void parseArtboard(Artboard a, Gamestate s) {
 
   if (a.name == 'whale') {
     playerCount++;
+    s.player?.component.x -= 50;
     if (playerCount == 2) {
-      s.player?.component.x += 300;
+      s.player?.component.x += a.width / 2;
+      // s.player?.component.scale.x = -1;
+      s.player?.rootBone?.scaleY *= -1;
+      // s.player?.target?.x *= -1;
+      s.player?.constraint = Rect.fromLTRB(
+          s.player!.constraint!.left - 50,
+          s.player!.constraint!.top,
+          s.player!.constraint!.right - 50,
+          s.player!.constraint!.bottom);
+      s.player?.invertX = true;
+      // s.player?.constraint.
     }
     s.player?.targetSpawn =
         s.player!.target!.translation; // + Vec2D.fromValues(50, 120);

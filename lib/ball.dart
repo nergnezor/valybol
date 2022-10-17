@@ -28,24 +28,35 @@ class Ball {
         p.target?.y += p.speed.y;
         p.target?.x += p.speed.x;
         p.target?.y =
-            p.target!.y.clamp(g.constraint!.top, g.constraint!.bottom);
+            p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
         p.target?.x =
-            p.target!.x.clamp(g.constraint!.left, g.constraint!.right);
+            p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
       }
+
       final playerOffset = p.component.absoluteTopLeftPosition;
+
+      // if (p.invertX) {
+      //   playerOffset.x -= 2 * p.rootBone!.x;
+      //   // tailPos.x -= dTarget.x;
+      // }
       Vec2D tailPos = p.tail!.worldTranslation +
           Vec2D.fromValues(playerOffset.x, playerOffset.y);
       if (tailPos == Vec2D()) continue;
       final dTail = tailPos - p.tailPrevious;
       p.tailPrevious = tailPos;
-      final d = ballPos + Vec2D.fromValues(radius!, radius!) - tailPos;
-      if (d.y > -1 && d.x.abs() < radius! * 2) {
+      var dBallTail = ballPos + Vec2D.fromValues(radius!, radius!) - tailPos;
+      if (p.invertX) {
+        // dBallTail.x *= -1;
+      }
+      if (dBallTail.y > -1 && dBallTail.x.abs() < radius! * 2) {
         isFalling = false;
-        shape!.y -= d.y;
+        shape!.y -= dBallTail.y;
         if (wasFalling) {
           velocity = Vec2D();
         }
-        if (d.x.abs() > 1) shape!.x -= d.x / 2;
+        if (dBallTail.x.abs() > 1) {
+          shape!.x -= (dBallTail.x / 2); // * (p.invertX ? -1 : 1);
+        }
         var tailSpeed = dTail;
         tailSpeed.x *= dt;
         tailSpeed.y *= 5000 * dt;
@@ -60,7 +71,7 @@ class Ball {
       velocity.y += 1000 * dt;
       if (ballPos.y > g.court!.y + offset.y) {
         velocity = Vec2D();
-        g.ball.shape!.opacity -= 0.01;
+        g.ball.shape!.opacity -= 0.05;
         if (g.ball.shape!.opacity <= 0) {
           g.ball.shape!.opacity = 1;
           g.ball.shape!.translation = g.ball.spawn;
