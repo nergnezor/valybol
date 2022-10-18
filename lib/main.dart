@@ -1,13 +1,10 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Draggable;
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:rive/math.dart';
-import 'package:valybol/player.dart';
 import 'gamestate.dart';
 import 'rivegame.dart';
 
@@ -63,10 +60,8 @@ class MyGame extends FlameGame with HasDraggables {
         info.delta.game.x * (p.component.isFlippedHorizontally ? -1 : 1);
     if (info.delta.game.y >= 0) {
       p?.isCharging = true;
-      p?.charge += info.delta.game.y;
       p?.target!.x -= info.delta.game.y;
     }
-    // print(p?.target?.x);
     p?.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
     p?.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
     super.onDragUpdate(pointerId, info);
@@ -81,7 +76,7 @@ class MyGame extends FlameGame with HasDraggables {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    // _drawVerticalLines(canvas);
+    _drawVerticalLines(canvas);
   }
 
   void _drawVerticalLines(Canvas c) {

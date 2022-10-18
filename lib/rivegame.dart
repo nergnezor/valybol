@@ -57,7 +57,7 @@ Future<List<CustomRiveComponent>> loadRive(
   var c = await addRiveArtboard('assets/valybol.riv', size, gamestate);
   components.add(c);
   await addPlayer(size, gamestate, components);
-  // await addPlayer(size, gamestate, components);
+  await addPlayer(size, gamestate, components);
 
   return components;
 }
@@ -97,7 +97,7 @@ void parseArtboard(Artboard a, Gamestate s) {
         break;
       case 'ball':
         s.ball.shape = child as Shape;
-        child.x += 150;
+        // child.x += 150;
         s.ball.spawn = child.translation;
         // s.ball.spawn.y = child.y;
         break;
@@ -114,8 +114,8 @@ void parseArtboard(Artboard a, Gamestate s) {
     playerCount++;
     if (playerCount == 2) {
       // s.player?.rootBone?.x -= 250;
-      s.player?.component.x += a.width;
-      s.player?.component.flipHorizontally();
+      // s.player?.component.x += a.width;
+      // s.player?.component.flipHorizontally();
 
       // s.player?.component.scale.x = -1;
       // s.player?.rootBone?.scaleY *= -1;
@@ -125,11 +125,10 @@ void parseArtboard(Artboard a, Gamestate s) {
       //     s.player!.constraint!.top,
       //     s.player!.constraint!.right - 50,
       //     s.player!.constraint!.bottom);
-      s.player?.invertX = true;
       // s.player?.constraint.
-      // s.player?.rootBone?.x += 150;
+      s.player?.rootBone?.x += 150;
     } else {
-      // s.player?.rootBone?.x -= 150;
+      s.player?.rootBone?.x -= 150;
     }
     s.player?.targetSpawn =
         s.player!.target!.translation; // + Vec2D.fromValues(50, 120);

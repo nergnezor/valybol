@@ -1,6 +1,7 @@
 import 'package:rive/math.dart';
 import 'package:rive/rive.dart';
 import 'package:valybol/gamestate.dart';
+import 'package:valybol/player.dart';
 
 class Ball {
   Shape? shape;
@@ -10,52 +11,33 @@ class Ball {
   double? radius;
   bool wasFalling = true;
   bool wasCharging = false;
+  Vec2D bottom = Vec2D();
 
   void update(double dt, Gamestate g) {
-    if (shape == null) {
-      return;
-    }
-    isFalling = true; //
+    isFalling = true;
     final offset = g.players.first.component.absoluteTopLeftPosition;
-    Vec2D ballPos = shape!.worldTranslation +
+    bottom = shape!.worldTranslation +
         Vec2D.fromValues(offset.x, offset.y) +
         Vec2D.fromValues(0, radius!);
     for (var p in g.players) {
-      final dTarget = p.target!.translation - p.targetSpawn;
-      if (dTarget.x < 0 && !p.isCharging) {
-        p.speed.y += 100 * dt;
-        p.speed.x = p.xFactor * p.speed.y;
-        p.target?.y += p.speed.x;
-        p.target?.x += p.speed.y;
-      } else {
-        p.speed = Vec2D();
-      }
+      moveTail(p, dt);
       final playerOffset = p.component.absoluteTopLeftPosition;
-
       Vec2D tailPos = p.tail!.worldTranslation +
           Vec2D.fromValues(playerOffset.x, playerOffset.y);
       if (tailPos == Vec2D()) continue;
-      p.tailPrevious = tailPos;
-      var dBallTail = ballPos - tailPos;
-      if (ballPos.y > tailPos.y && dBallTail.x.abs() < radius! * 3) {
+      var dBallTail = bottom - tailPos;
+      if (bottom.y > tailPos.y && dBallTail.x.abs() < radius! * 3) {
         isFalling = false;
         shape!.y -= dBallTail.y;
-        if (wasFalling) {
-          velocity = Vec2D();
-        }
-        if (dBallTail.x.abs() > 1) {
-          shape!.x -= (dBallTail.x / 4); 
-        }
+        if (dBallTail.x.abs() > 1) shape!.x -= (dBallTail.x / 4);
 
-        if (p.speed.y * 70 > velocity.y) {
-          velocity.x = 70 * p.speed.x;
-          velocity.y = 70 * p.speed.y;
-        }
+        velocity.x = 70 * p.speed.x;
+        velocity.y = 70 * p.speed.y;
       }
     }
     if (isFalling) {
       velocity.y -= 1000 * dt;
-      if (ballPos.y > g.court!.y + offset.y) {
+      if (bottom.y > g.court!.y + offset.y) {
         velocity = Vec2D();
         g.ball.shape!.opacity -= 0.05;
         if (g.ball.shape!.opacity <= 0) {
@@ -67,5 +49,17 @@ class Ball {
     wasFalling = isFalling;
     shape!.x += velocity.x * dt;
     shape!.y -= velocity.y * dt;
+  }
+
+  void moveTail(Player p, double dt) {
+    final dTarget = p.target!.translation - p.targetSpawn;
+    if (dTarget.x < 0 && !p.isCharging) {
+      p.speed.y += 100 * dt;
+      p.speed.x = p.xFactor * p.speed.y;
+      p.target?.y += p.speed.x;
+      p.target?.x += p.speed.y;
+    } else {
+      p.speed = Vec2D();
+    }
   }
 }
