@@ -6,6 +6,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:rive/math.dart';
 import 'package:valybol/player.dart';
 import 'gamestate.dart';
 import 'rivegame.dart';
@@ -40,7 +41,7 @@ class MyGame extends FlameGame with HasDraggables {
   void onDragEnd(int pointerId, DragEndInfo info) {
     g.player?.isCharging = false;
     final d = g.player!.target!.translation - g.player!.targetSpawn;
-    if (!d.x.isNaN) g.player!.xFactor = d.x / d.y;
+    if (!d.x.isNaN) g.player!.xFactor = -2 * d.y / d.x;
     g.player!.speed.y = 0;
     super.onDragEnd(pointerId, info);
   }
@@ -65,7 +66,7 @@ class MyGame extends FlameGame with HasDraggables {
       p?.charge += info.delta.game.y;
       p?.target!.x -= info.delta.game.y;
     }
-    print(p?.target?.x);
+    // print(p?.target?.x);
     p?.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
     p?.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
     super.onDragUpdate(pointerId, info);

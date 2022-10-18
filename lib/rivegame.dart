@@ -86,7 +86,7 @@ void parseArtboard(Artboard a, Gamestate s) {
         final c = child.children.whereType<TranslationConstraint>().single;
         s.player?.constraint =
             Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
-        // c.strength = 0;
+        c.strength = 0;
         break;
       case 'rectangle':
         child = child as Rectangle;
