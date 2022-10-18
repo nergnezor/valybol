@@ -76,7 +76,7 @@ class MyGame extends FlameGame with HasDraggables {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    _drawVerticalLines(canvas);
+    //_drawVerticalLines(canvas);
   }
 
   void _drawVerticalLines(Canvas c) {
