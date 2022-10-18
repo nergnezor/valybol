@@ -22,9 +22,9 @@ class Ball {
         shape!.worldTranslation + Vec2D.fromValues(offset.x, offset.y);
     for (var p in g.players) {
       final dTarget = p.target!.translation - p.targetSpawn;
-      if (dTarget.y > 0 && !p.isCharging) {
-        p.speed.y -= 200 * dt;
-        p.speed.x = -p.speed.y * p.xFactor;
+      if (dTarget.x < 0 && !p.isCharging) {
+        p.speed.x += 10 * dt;
+        // p.speed.x = -p.speed.y * p.xFactor;
         p.target?.y += p.speed.y;
         p.target?.x += p.speed.x;
         p.target?.y =

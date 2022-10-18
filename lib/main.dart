@@ -47,8 +47,8 @@ class MyGame extends FlameGame with HasDraggables {
 
   @override
   void onDragStart(int pointerId, DragStartInfo info) {
-    int activeIndex =
-        (info.eventPosition.game.x / (size.x / 2)).floor(); // ? 1 : 0;
+    int activeIndex = (info.eventPosition.game.x / (size.x / g.players.length))
+        .floor(); // ? 1 : 0;
     g.player = g.players[activeIndex];
     g.player?.xFactor = 0;
 
@@ -58,7 +58,8 @@ class MyGame extends FlameGame with HasDraggables {
   @override
   void onDragUpdate(int pointerId, DragUpdateInfo info) {
     final p = g.player;
-    p?.target!.y += info.delta.game.x;
+    p?.target!.y +=
+        info.delta.game.x * (p.component.isFlippedHorizontally ? -1 : 1);
     if (info.delta.game.y >= 0) {
       p?.isCharging = true;
       p?.charge += info.delta.game.y;
