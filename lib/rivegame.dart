@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame_rive/flame_rive.dart';
+import 'package:flutter/material.dart' show Colors;
 // import 'package:flutter/material.dart';
 import 'package:rive/components.dart';
 import 'package:rive/math.dart';
@@ -116,8 +117,7 @@ void parseArtboard(Artboard a, Gamestate s) {
   if (a.name == 'whale') {
     playerCount++;
     if (playerCount == 2) {
-      s.player?.fill?.renderOpacity = 0;
-
+      s.player?.fill?.paint.color = Colors.black.withOpacity(0);
       // a.forEachChild((component) => false)
       // s.player?.rootBone?.x -= 250;
       // s.player?.component.x += a.width;
