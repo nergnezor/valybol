@@ -2,7 +2,7 @@
     "name": "valybol",
     "short_name": "valybol",
     "start_url": ".",
-    "display": "standalone",
+    "display": "fullscreen",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
     "description": "Spelsylt 7",
