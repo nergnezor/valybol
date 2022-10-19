@@ -17,4 +17,5 @@ class Player {
   late CustomRiveComponent component;
   RootBone? rootBone;
   Rect? constraint;
+  Fill? fill;
 }

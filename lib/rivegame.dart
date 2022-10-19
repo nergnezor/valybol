@@ -107,12 +107,18 @@ void parseArtboard(Artboard a, Gamestate s) {
       case 'val':
         s.player?.rootBone = child as RootBone;
         break;
+      case 'body':
+        s.player?.fill = (child as Node).children.whereType<Fill>().last;
+        break;
     }
   });
 
   if (a.name == 'whale') {
     playerCount++;
     if (playerCount == 2) {
+      s.player?.fill?.renderOpacity = 0;
+
+      // a.forEachChild((component) => false)
       // s.player?.rootBone?.x -= 250;
       // s.player?.component.x += a.width;
       // s.player?.component.flipHorizontally();
@@ -125,7 +131,8 @@ void parseArtboard(Artboard a, Gamestate s) {
       //     s.player!.constraint!.top,
       //     s.player!.constraint!.right - 50,
       //     s.player!.constraint!.bottom);
-      // s.player?.constraint.
+      // a.fills.singleWhere((element) => element.name == 'Fill 2').renderOpacity =
+      1;
       s.player?.rootBone?.x += 150;
     } else {
       s.player?.rootBone?.x -= 150;
