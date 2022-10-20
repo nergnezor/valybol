@@ -136,6 +136,8 @@ void parseArtboard(Artboard a, Gamestate s) {
       s.player?.rootBone?.x += 150;
     } else {
       s.player?.rootBone?.x -= 150;
+      s.offset = Vec2D.fromValues(
+          s.player!.component.position.x, s.player!.component.position.y);
     }
     s.player?.targetSpawn =
         s.player!.target!.translation; // + Vec2D.fromValues(50, 120);

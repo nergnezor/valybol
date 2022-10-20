@@ -16,17 +16,16 @@ class Ball {
   void update(double dt, Gamestate g) {
     isFalling = true;
     final offset = g.players.first.component.absoluteTopLeftPosition;
-    bottom = shape!.worldTranslation +
-        Vec2D.fromValues(offset.x, offset.y) +
-        Vec2D.fromValues(0, radius!);
+    bottom = shape!.worldTranslation + g.offset + Vec2D.fromValues(0, radius!);
     for (var p in g.players) {
       moveTail(p, dt);
-      final playerOffset = p.component.absoluteTopLeftPosition;
+      final playerOffset = p.component.position;
       Vec2D tailPos = p.tail!.worldTranslation +
           Vec2D.fromValues(playerOffset.x, playerOffset.y);
       if (tailPos == Vec2D()) continue;
       var dBallTail = bottom - tailPos;
       if (bottom.y > tailPos.y && dBallTail.x.abs() < radius! * 3) {
+        print(p.component.position);
         isFalling = false;
         shape!.y -= dBallTail.y;
         if (dBallTail.x.abs() > 1) shape!.x -= (dBallTail.x / 4);
