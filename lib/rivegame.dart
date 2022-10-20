@@ -57,6 +57,20 @@ Future<List<CustomRiveComponent>> loadRive(
   final components = <CustomRiveComponent>[];
   var c = await addRiveArtboard('assets/valybol.riv', size, gamestate);
   components.add(c);
+//  Artboard artboard = await loadArtboard(RiveFile.asset(path));
+  // final component =
+  //     CustomRiveComponent(c.artboard.activeNestedArtboards.first, gamestate);
+  // component.position.x = (size.x - artboard.width) / 2;
+  // component.position.y = (size.y - artboard.height) / 2;
+  //     c.artboard.activeNestedArtboards.first as String, size, gamestate);
+  // final component = CustomRiveComponent(
+  //     c.artboard.activeNestedArtboards.first.artboard, gamestate);
+  // components.add(component);
+  // components.add(component);
+  // component.position.x = (size.x  / 2;
+  // component.position.y = (size.y - artboard.height) / 2;
+  // c.artboard.activeNestedArtboards.first.opacity = 0;
+
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
 
@@ -116,30 +130,15 @@ void parseArtboard(Artboard a, Gamestate s) {
 
   if (a.name == 'whale') {
     playerCount++;
+    s.player!.component.position.y += 150;
     if (playerCount == 2) {
       s.player?.fill?.paint.color = Colors.black.withOpacity(0);
-      // a.forEachChild((component) => false)
-      // s.player?.rootBone?.x -= 250;
-      // s.player?.component.x += a.width;
-      // s.player?.component.flipHorizontally();
-
-      // s.player?.component.scale.x = -1;
-      // s.player?.rootBone?.scaleY *= -1;
-      // s.player?.target?.x *= -1;
-      // s.player?.constraint = Rect.fromLTRB(
-      //     s.player!.constraint!.left - 50,
-      //     s.player!.constraint!.top,
-      //     s.player!.constraint!.right - 50,
-      //     s.player!.constraint!.bottom);
-      // a.fills.singleWhere((element) => element.name == 'Fill 2').renderOpacity =
-      1;
-      s.player?.rootBone?.x += 150;
+      s.player!.component.position.x += 250;
     } else {
-      s.player?.rootBone?.x -= 150;
-      s.offset = Vec2D.fromValues(
-          s.player!.component.position.x, s.player!.component.position.y);
+      s.player!.component.position.x -= 250;
+      s.offset = Vec2D.fromValues(s.player!.component.position.x,
+          s.player!.component.position.y - 250 - 150);
     }
-    s.player?.targetSpawn =
-        s.player!.target!.translation; // + Vec2D.fromValues(50, 120);
+    s.player?.targetSpawn = s.player!.target!.translation;
   }
 }
