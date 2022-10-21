@@ -131,14 +131,18 @@ void parseArtboard(Artboard a, Gamestate s) {
   if (a.name == 'whale') {
     playerCount++;
     s.player!.component.position.y += 150;
+    // s.player!.component.position.x -= 250;
     if (playerCount == 2) {
       s.player?.fill?.paint.color = Colors.black.withOpacity(0);
-      s.player!.component.position.x += 250;
+      s.player!.component.flipHorizontallyAroundCenter();
+      // s.player!.component.artboard.x += 500;
+
+      // s.player!.component.position.x += 500;
     } else {
       s.player!.component.position.x -= 250;
-      s.offset = Vec2D.fromValues(s.player!.component.position.x,
-          s.player!.component.position.y - 250 - 150);
     }
+    s.player!.offset = Vec2D.fromValues(s.player!.component.position.x,
+        s.player!.component.position.y - 250 - 150);
     s.player?.targetSpawn = s.player!.target!.translation;
   }
 }

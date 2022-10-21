@@ -15,28 +15,30 @@ class Ball {
 
   void update(double dt, Gamestate g) {
     isFalling = true;
-    final offset = g.players.first.component.absoluteTopLeftPosition;
-    bottom = shape!.worldTranslation + g.offset + Vec2D.fromValues(0, radius!);
+    // final offset = g.players.first.component.absoluteTopLeftPosition;
+    bottom = shape!.worldTranslation + Vec2D.fromValues(0, radius!);
     for (var p in g.players) {
       moveTail(p, dt);
-      final playerOffset = p.component.position;
-      Vec2D tailPos = p.tail!.worldTranslation +
-          Vec2D.fromValues(playerOffset.x, playerOffset.y);
+      // final playerOffset = p.component.position;
+      Vec2D tailPos = p.tail!.worldTranslation - p.offset;
       if (tailPos == Vec2D()) continue;
       var dBallTail = bottom - tailPos;
       if (bottom.y > tailPos.y && dBallTail.x.abs() < radius! * 3) {
-        print(p.component.position);
+        // print(p.component.position);
         isFalling = false;
-        shape!.y -= dBallTail.y;
-        if (dBallTail.x.abs() > 1) shape!.x -= (dBallTail.x / 4);
-
+        shape!.y += -10;
+        // dBallTail.y;
+        if (dBallTail.x.abs() > 1) {
+          shape!.x -= (dBallTail.x / 4);
+          print(bottom);
+        }
         velocity.x = 70 * p.speed.x;
         velocity.y = 70 * p.speed.y;
       }
     }
     if (isFalling) {
       velocity.y -= 1000 * dt;
-      if (bottom.y > g.court!.y + offset.y) {
+      if (bottom.y > g.court!.y + g.players[0].offset.y) {
         velocity = Vec2D();
         g.ball.shape!.opacity -= 0.05;
         if (g.ball.shape!.opacity <= 0) {

@@ -71,7 +71,8 @@ class MyGame extends FlameGame with HasDraggables {
       p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
       p.component.position.x += info.delta.game.x;
     }
-    p?.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
+    p.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
+    print(p.component.position.x);
     super.onDragUpdate(pointerId, info);
   }
 

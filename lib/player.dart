@@ -18,4 +18,5 @@ class Player {
   RootBone? rootBone;
   Rect? constraint;
   Fill? fill;
+  Vec2D offset = Vec2D();
 }
