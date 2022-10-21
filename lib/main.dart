@@ -7,12 +7,16 @@ import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'gamestate.dart';
 import 'rivegame.dart';
+// import 'package:flame_audio/flame_audio.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-void main() {
+AudioPlayer? player;
+Future<void> main() async {
   print('start main');
   runApp(GameWidget(
     game: MyGame(),
   ));
+  player = AudioPlayer();
   if (!kIsWeb && Platform.isAndroid) {
     try {
       FlutterDisplayMode.setHighRefreshRate();
@@ -27,7 +31,6 @@ void main() {
 
 class MyGame extends FlameGame with HasDraggables {
   Gamestate g = Gamestate();
-
   @override
   Color backgroundColor() => const Color(0xff471717);
 
@@ -53,6 +56,7 @@ class MyGame extends FlameGame with HasDraggables {
         .floor(); // ? 1 : 0;
     g.player = g.players[activeIndex];
     g.player?.xFactor = 0;
+    startBgmMusic();
 
     super.onDragStart(pointerId, info);
   }
@@ -96,5 +100,11 @@ class MyGame extends FlameGame with HasDraggables {
       c.drawLine(current, target, Paint()..color = Colors.red);
       c.drawCircle(target, 10, Paint()..color = Colors.red);
     }
+  }
+
+  Future<void> startBgmMusic() async {
+    // FlameAudio.bgm.initialize();
+    // FlameAudio.bgm.play('SalmonLakeShort91bpm.mp3');
+    await player?.play(AssetSource('SalmonLakeShort91bpm.mp3'));
   }
 }

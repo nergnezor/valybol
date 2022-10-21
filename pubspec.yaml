@@ -13,6 +13,8 @@ dependencies:
   flame: ^1.4.0
   flutter_displaymode: ^0.4.0
   motion_sensors: ^0.1.0
+  flame_audio: ^1.3.2
+  audioplayers: ^1.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -22,6 +24,7 @@ flutter:
   assets:
     - assets/valybol.riv
     - assets/whale.riv
+    - assets/SalmonLakeShort91bpm.mp3
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
