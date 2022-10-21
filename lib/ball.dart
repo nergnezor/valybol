@@ -30,9 +30,7 @@ class Ball {
       }
       var dBallTail = shape!.worldTranslation - tailPos;
       dBallTail.y += radius!;
-      if (++c == 2) {
-        print(dBallTail);
-      }
+
       if (dBallTail.y > 0 &&
           dBallTail.y < radius! &&
           dBallTail.x.abs() < radius! * 3) {
