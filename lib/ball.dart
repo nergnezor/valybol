@@ -11,12 +11,12 @@ class Ball {
   double? radius;
   bool wasFalling = true;
   bool wasCharging = false;
-  Vec2D bottom = Vec2D();
+  // Vec2D bottom = Vec2D();
 
   void update(double dt, Gamestate g) {
     isFalling = true;
     final offset = g.players.first.component.absoluteTopLeftPosition;
-    bottom = shape!.worldTranslation + Vec2D.fromValues(0, radius!);
+    // bottom = shape!.worldTranslation + Vec2D.fromValues(0, radius!);
     int c = 0;
     for (var p in g.players) {
       moveTail(p, dt);
@@ -28,11 +28,14 @@ class Ball {
       if (p.component.isFlippedHorizontally) {
         tailPos.x = playerOffset.x - p.offset.x - p.tail!.worldTranslation.x;
       }
-      var dBallTail = bottom - tailPos;
+      var dBallTail = shape!.worldTranslation - tailPos;
+      dBallTail.y += radius!;
       if (++c == 2) {
         print(dBallTail);
       }
-      if (bottom.y > tailPos.y && dBallTail.x.abs() < radius! * 3) {
+      if (dBallTail.y > 0 &&
+          dBallTail.y < radius! &&
+          dBallTail.x.abs() < radius! * 3) {
         // print(p.component.position);
         isFalling = false;
         shape!.y -= dBallTail.y;
@@ -44,7 +47,7 @@ class Ball {
     }
     if (isFalling) {
       velocity.y -= 1000 * dt;
-      if (bottom.y > g.court!.y + offset.y) {
+      if (shape!.worldTranslation.y > g.court!.y + offset.y) {
         velocity = Vec2D();
         g.ball.shape!.opacity -= 0.05;
         if (g.ball.shape!.opacity <= 0) {

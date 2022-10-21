@@ -111,6 +111,7 @@ void parseArtboard(Artboard a, Gamestate s) {
       case 'ball':
         s.ball.shape = child as Shape;
         child.x -= 50 + 200 - 350;
+
         s.ball.spawn = child.translation;
         // s.ball.spawn.y = child.y;
         break;
@@ -135,7 +136,7 @@ void parseArtboard(Artboard a, Gamestate s) {
       s.player!.component.flipHorizontallyAroundCenter();
       s.player?.fill?.paint.color = Colors.black.withOpacity(0);
       s.player!.component.position.x += 200;
-      s.player!.offset.x = 600;
+      s.player!.offset.x = 610;
     } else {
       s.player!.component.position.x -= 200;
     }
