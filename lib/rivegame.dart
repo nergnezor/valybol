@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame_rive/flame_rive.dart';
@@ -45,7 +46,10 @@ Future<CustomRiveComponent> addRiveArtboard(
     String path, size, Gamestate gamestate) async {
   Artboard artboard = await loadArtboard(RiveFile.asset(path));
   final component = CustomRiveComponent(artboard, gamestate);
-  if (gamestate.scale == 0) gamestate.scale = 7 * size.x / artboard.width;
+  if (gamestate.scale == 0) {
+    gamestate.scale =
+        min(7 * size.x / artboard.width, 7 * size.y / artboard.height);
+  }
   component.scale = Vector2.all(gamestate.scale);
   component.position.x = (size.x - gamestate.scale * artboard.width) / 2;
   component.position.y = (size.y - gamestate.scale * artboard.height) / 2;
@@ -100,7 +104,7 @@ void parseArtboard(Artboard a, Gamestate g) {
       case 'ball':
         g.ball.shape = child as Shape;
         child.x -= 100;
-        child.x -= 200;
+        child.x -= 150;
         g.ball.spawn = child.translation;
         break;
       case 'ball ellipse':
@@ -120,14 +124,14 @@ void parseArtboard(Artboard a, Gamestate g) {
     playerCount++;
     p.offset = Vec2D.fromValues(p.component.position.x - (g.scale - 1) * 200,
         p.component.position.y + (g.scale - 1) * 120);
-    p.component.position.y += 100 * g.scale;
+    p.component.position.y += 120 * g.scale;
     if (playerCount == 2) {
       p.component.flipHorizontallyAroundCenter();
       p.fill?.paint.color = Colors.black.withOpacity(0);
       p.component.position.x += 200 * g.scale;
       p.offset.x += p.component.width * g.scale + (g.scale - 1) * 400;
       p.clampStart = 0;
-      p.clampEnd = 150;
+      p.clampEnd = 130;
     } else {
       p.component.position.x -= 200 * g.scale;
       p.clampStart = -100;

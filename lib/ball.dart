@@ -12,7 +12,6 @@ class Ball {
   bool isFalling = true; //
   double? radius;
   bool wasFalling = true;
-  bool wasCharging = false;
   // Vec2D bottom = Vec2D();
 
   void update(double dt, Gamestate g) {
@@ -20,21 +19,10 @@ class Ball {
     // final offset = g.players.first.component.absoluteTopLeftPosition;
     // bottom = shape!.worldTranslation + Vec2D.fromValues(0, radius!);
     int c = 0;
-    if (isFalling) {
-      moveOpponent(g.players[1]);
-      velocity.y -= 1000 * dt;
-      if (shape!.worldTranslation.y > g.court!.y) {
-        velocity = Vec2D();
-        g.ball.shape!.opacity -= 0.05;
-        if (g.ball.shape!.opacity <= 0) {
-          g.ball.shape!.opacity = 1;
-          g.ball.shape!.translation = g.ball.spawn;
-        }
-      }
-    }
+    if (!g.players[0].isCharging) moveOpponent(g.players[1]);
     for (var p in g.players) {
-      moveTail(p, dt);
       final ballOffset = getBallOffset(p);
+      moveTail(p, dt);
       // print(dBallTail);
       if (ballOffset.y > 0 &&
           ballOffset.y < radius! &&
@@ -49,6 +37,17 @@ class Ball {
       }
       p.rootBone?.x = p.rootBone!.x.clamp(p.clampStart, p.clampEnd);
     }
+    if (isFalling) {
+      velocity.y -= 1000 * dt;
+      if (shape!.worldTranslation.y > 50) {
+        velocity = Vec2D();
+        g.ball.shape!.opacity -= 0.05;
+        if (g.ball.shape!.opacity <= 0) {
+          g.ball.shape!.opacity = 1;
+          g.ball.shape!.translation = g.ball.spawn;
+        }
+      }
+    }
     wasFalling = isFalling;
     shape!.x += velocity.x * dt;
     shape!.y -= velocity.y * dt;
@@ -59,11 +58,11 @@ class Ball {
     Vec2D tailPos = p.tail!.worldTranslation +
         Vec2D.fromValues(playerOffset.x, playerOffset.y) -
         p.offset;
-    if (tailPos == Vec2D()) return 0;
+    if (tailPos == Vec2D()) return Vec2D.fromValues(1000, 1000);
     if (p.component.isFlippedHorizontally) {
       tailPos.x = playerOffset.x - p.offset.x - p.tail!.worldTranslation.x;
     }
-    var dBallTail = shape!.worldTranslation - tailPos;
+    Vec2D dBallTail = shape!.worldTranslation - tailPos;
     dBallTail.y += radius!;
     return dBallTail;
   }
@@ -78,14 +77,67 @@ class Ball {
       p.target?.x += p.speed.y;
     } else {
       p.speed = Vec2D();
+      // print(p.speed);
+      if (p.shooting) {
+        p.shooting = false;
+      }
     }
   }
 
-  void moveOpponent(Player player) {
-    if (velocity.y > 0) return;
-    final ballOffset = getBallOffset(player);
+  void moveOpponent(Player p) {
+    // print(p.target!.y);
+    if (p.shooting) {
+      // if (p.target!.y >= p.constraint!.right) {
+      //   p.shooting = false;
+      // }
+      return;
+    }
+    // if (velocity.y > -50) {
+    //   // p.target!.y -= 10;
+    //   p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
+    //   return;
+    // }
+    final Vec2D ballOffset = getBallOffset(p);
+
     // print(player.rootBone?.x);
-    player.rootBone?.x +=
-        min(5, ballOffset.x.abs() as double) * (ballOffset.x < 0 ? 1 : -1);
+    p.rootBone?.x += min(5, ballOffset.x.abs()) * (ballOffset.x < 0 ? 1 : -1);
+    final distance = sqrt(pow(ballOffset.x, 2) + pow(ballOffset.y, 2));
+    final d = p.target!.translation - p.targetSpawn;
+    print(d);
+    if (!p.isCharging) {
+      p.target!.y -= 2;
+      // p.target!.x -= p.target!.translation.x.compareTo(p.targetSpawn.x);
+      // p.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
+      p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
+    }
+    if (distance > 200) {
+      // if (distance > 1) {
+      //   p.target!.x += d.x < 0 ? 1 : -1;
+      //   p.target!.y += d.y < 0 ? 1 : -1;
+      // }
+      return;
+    }
+
+    p.target!.x -= 2;
+    p.target!.y += 4;
+    p.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
+    p.isCharging = true;
+    // print(distance);
+    // print(isFalling);
+    // final dTarget = p.target!.translation - p.targetSpawn;
+    // print(dTarget);
+
+    if (d.y > p.constraint!.bottom && !p.shooting) {
+      p.shooting = true;
+      // p.target?.y = p.constraint!.right;
+      // if (distance < 1 && velocity.y < 0) {
+      p.isCharging = false;
+      if (!d.x.isNaN) p.xFactor = -1 * d.y / d.x;
+      // p.xFactor = 0.5;
+      p.speed.y = 0;
+    }
+    p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
+
+    p.wasCharging = p.isCharging;
   }
 }

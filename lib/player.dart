@@ -10,6 +10,8 @@ class Player {
   Node? target;
   Node? tail;
   bool isCharging = false;
+  bool wasCharging = false;
+  bool shooting = false;
   double xFactor = 0;
   Vec2D targetSpawn = Vec2D();
   Vec2D ballSpawn = Vec2D();

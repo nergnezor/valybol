@@ -46,6 +46,7 @@ class MyGame extends FlameGame with HasDraggables {
     final d = g.player!.target!.translation - g.player!.targetSpawn;
     if (!d.x.isNaN) g.player!.xFactor = -2 * d.y / d.x;
     g.player!.speed.y = 0;
+    g.players[1].shooting = false;
     super.onDragEnd(pointerId, info);
   }
 
