@@ -15,7 +15,7 @@ class Ball {
 
   void update(double dt, Gamestate g) {
     isFalling = true;
-    final offset = g.players.first.component.absoluteTopLeftPosition;
+    // final offset = g.players.first.component.absoluteTopLeftPosition;
     // bottom = shape!.worldTranslation + Vec2D.fromValues(0, radius!);
     int c = 0;
     for (var p in g.players) {
@@ -30,7 +30,7 @@ class Ball {
       }
       var dBallTail = shape!.worldTranslation - tailPos;
       dBallTail.y += radius!;
-
+      print(dBallTail);
       if (dBallTail.y > 0 &&
           dBallTail.y < radius! &&
           dBallTail.x.abs() < radius! * 3) {
@@ -45,7 +45,7 @@ class Ball {
     }
     if (isFalling) {
       velocity.y -= 1000 * dt;
-      if (shape!.worldTranslation.y > g.court!.y + offset.y) {
+      if (shape!.worldTranslation.y > g.court!.y) {
         velocity = Vec2D();
         g.ball.shape!.opacity -= 0.05;
         if (g.ball.shape!.opacity <= 0) {

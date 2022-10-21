@@ -45,8 +45,10 @@ Future<CustomRiveComponent> addRiveArtboard(
     String path, size, Gamestate gamestate) async {
   Artboard artboard = await loadArtboard(RiveFile.asset(path));
   final component = CustomRiveComponent(artboard, gamestate);
-  component.position.x = size.x / 2 - artboard.width / 2;
-  component.position.y = (size.y - artboard.height) / 2;
+  gamestate.scale = 1.5;
+  component.scale = Vector2.all(gamestate.scale);
+  component.position.x = (size.x - gamestate.scale * artboard.width) / 2;
+  component.position.y = (size.y - gamestate.scale * artboard.height) / 2;
   return component;
 }
 
@@ -55,20 +57,6 @@ Future<List<CustomRiveComponent>> loadRive(
   final components = <CustomRiveComponent>[];
   var c = await addRiveArtboard('assets/valybol.riv', size, gamestate);
   components.add(c);
-//  Artboard artboard = await loadArtboard(RiveFile.asset(path));
-  // final component =
-  //     CustomRiveComponent(c.artboard.activeNestedArtboards.first, gamestate);
-  // component.position.x = (size.x - artboard.width) / 2;
-  // component.position.y = (size.y - artboard.height) / 2;
-  //     c.artboard.activeNestedArtboards.first as String, size, gamestate);
-  // final component = CustomRiveComponent(
-  //     c.artboard.activeNestedArtboards.first.artboard, gamestate);
-  // components.add(component);
-  // components.add(component);
-  // component.position.x = (size.x  / 2;
-  // component.position.y = (size.y - artboard.height) / 2;
-  // c.artboard.activeNestedArtboards.first.opacity = 0;
-
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
 
@@ -85,8 +73,8 @@ Future<void> addPlayer(
 }
 
 int playerCount = 0;
-void parseArtboard(Artboard a, Gamestate s) {
-  s.player = s.players[playerCount];
+void parseArtboard(Artboard a, Gamestate g) {
+  g.player = g.players[playerCount];
   a.forEachComponent((child) {
     switch (child.name) {
       case 'target':
@@ -95,51 +83,58 @@ void parseArtboard(Artboard a, Gamestate s) {
         if (!Settings.showTargets) {
           child.opacity = 0;
         }
-        s.player?.target = child;
+        g.player?.target = child;
         final c = child.children.whereType<TranslationConstraint>().single;
-        s.player?.constraint =
+        g.player?.constraint =
             Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
         c.strength = 0;
         break;
       case 'rectangle':
         child = child as Rectangle;
-        s.court = Vec2D.fromValues(child.width, child.height);
+        g.court = Vec2D.fromValues(child.width, child.height);
         break;
       case 'tail':
-        s.player?.tail = child as Node;
+        g.player?.tail = child as Node;
         break;
       case 'ball':
-        s.ball.shape = child as Shape;
-        child.x -= 50 + 200 - 350;
+        g.ball.shape = child as Shape;
+        child.x -= 100;
+        child.x -= 200;
+        //-100;
+        //60 + 250;
+        //250;
+        // -350;
 
-        s.ball.spawn = child.translation;
+        g.ball.spawn = child.translation;
         // s.ball.spawn.y = child.y;
         break;
       case 'ball ellipse':
-        s.ball.radius = (child as Ellipse).radiusX;
+        g.ball.radius = (child as Ellipse).radiusX;
         break;
       case 'val':
-        s.player?.rootBone = child as RootBone;
+        g.player?.rootBone = child as RootBone;
         break;
       case 'body':
-        s.player?.fill = (child as Node).children.whereType<Fill>().last;
+        g.player?.fill = (child as Node).children.whereType<Fill>().last;
         break;
     }
   });
 
   if (a.name == 'whale') {
     playerCount++;
-    s.player!.offset = Vec2D.fromValues(100, 600);
-    s.player!.component.position.y += 120;
-    s.player!.component.position.x -= 60;
+    // g.player!.component.position.x -= 100 * g.scale;
+    g.player!.offset = Vec2D.fromValues(
+        g.player!.component.position.x - (g.scale - 1) * 200,
+        g.player!.component.position.y + (g.scale - 1) * 120);
+    g.player!.component.position.y += 120 * g.scale;
     if (playerCount == 2) {
-      s.player!.component.flipHorizontallyAroundCenter();
-      s.player?.fill?.paint.color = Colors.black.withOpacity(0);
-      s.player!.component.position.x += 200;
-      s.player!.offset.x = 610;
+      g.player!.component.flipHorizontallyAroundCenter();
+      g.player?.fill?.paint.color = Colors.black.withOpacity(0);
+      g.player!.component.position.x += 200 * g.scale;
+      g.player!.offset.x += g.player!.component.width * g.scale;
     } else {
-      s.player!.component.position.x -= 200;
+      g.player!.component.position.x -= 200 * g.scale;
     }
-    s.player?.targetSpawn = s.player!.target!.translation;
+    g.player?.targetSpawn = g.player!.target!.translation;
   }
 }
