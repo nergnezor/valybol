@@ -8,5 +8,5 @@ class Gamestate {
   Ball ball = Ball();
   Player? player;
   Vec2D? court;
-  double scale = 1.0;
+  double scale = 0;
 }

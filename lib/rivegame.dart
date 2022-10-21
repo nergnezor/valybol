@@ -45,7 +45,7 @@ Future<CustomRiveComponent> addRiveArtboard(
     String path, size, Gamestate gamestate) async {
   Artboard artboard = await loadArtboard(RiveFile.asset(path));
   final component = CustomRiveComponent(artboard, gamestate);
-  gamestate.scale = 2;
+  if (gamestate.scale == 0) gamestate.scale = 7 * size.x / artboard.width;
   component.scale = Vector2.all(gamestate.scale);
   component.position.x = (size.x - gamestate.scale * artboard.width) / 2;
   component.position.y = (size.y - gamestate.scale * artboard.height) / 2;
@@ -100,13 +100,7 @@ void parseArtboard(Artboard a, Gamestate g) {
         g.ball.shape = child as Shape;
         child.x -= 100;
         child.x -= 200;
-        //-100;
-        //60 + 250;
-        //250;
-        // -350;
-
         g.ball.spawn = child.translation;
-        // s.ball.spawn.y = child.y;
         break;
       case 'ball ellipse':
         g.ball.radius = (child as Ellipse).radiusX;
@@ -122,11 +116,10 @@ void parseArtboard(Artboard a, Gamestate g) {
 
   if (a.name == 'whale') {
     playerCount++;
-    // g.player!.component.position.x -= 100 * g.scale;
     g.player!.offset = Vec2D.fromValues(
         g.player!.component.position.x - (g.scale - 1) * 200,
         g.player!.component.position.y + (g.scale - 1) * 120);
-    g.player!.component.position.y += 120 * g.scale;
+    g.player!.component.position.y += 100 * g.scale;
     if (playerCount == 2) {
       g.player!.component.flipHorizontallyAroundCenter();
       g.player?.fill?.paint.color = Colors.black.withOpacity(0);
