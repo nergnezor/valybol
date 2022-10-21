@@ -3,6 +3,7 @@
     "short_name": "valybol",
     "start_url": ".",
     "display": "fullscreen",
+    "orientation": "portrait",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
     "description": "Spelsylt 7",
