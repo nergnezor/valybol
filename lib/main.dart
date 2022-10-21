@@ -103,19 +103,18 @@ class MyGame extends FlameGame with HasDraggables {
 
   Future<void> startBgmMusic() async {
     if (player?.state == PlayerState.playing) {
-      // inputs.
-      // .controller.findInput<bool>('dress')?.change(true);})
       return;
     }
-    g.players.forEach((p) {
-      p.component.controller.inputs.first.change(true);
-    });
+    togglePlayerInput(true);
     player?.onPlayerComplete.listen((event) {
-      g.players.forEach((p) {
-        p.component.controller.inputs.first.change(false);
-      });
+      togglePlayerInput(false);
     });
-    // player!.setReleaseMode(ReleaseMode.loop);
     await player?.play(AssetSource('SalmonLake91bpm.ogg'));
+  }
+
+  void togglePlayerInput(bool b) {
+    for (var p in g.players) {
+      p.component.controller.inputs.first.change(b);
+    }
   }
 }

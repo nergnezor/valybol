@@ -45,7 +45,7 @@ Future<CustomRiveComponent> addRiveArtboard(
     String path, size, Gamestate gamestate) async {
   Artboard artboard = await loadArtboard(RiveFile.asset(path));
   final component = CustomRiveComponent(artboard, gamestate);
-  component.position.x = (size.x - artboard.width) / 2;
+  component.position.x = size.x / 2 - artboard.width / 2;
   component.position.y = (size.y - artboard.height) / 2;
   return component;
 }
@@ -110,7 +110,7 @@ void parseArtboard(Artboard a, Gamestate s) {
         break;
       case 'ball':
         s.ball.shape = child as Shape;
-        // child.x += 150;
+        child.x -= 50 + 200;
         s.ball.spawn = child.translation;
         // s.ball.spawn.y = child.y;
         break;
@@ -128,14 +128,14 @@ void parseArtboard(Artboard a, Gamestate s) {
 
   if (a.name == 'whale') {
     playerCount++;
-    s.player!.component.position.y += 150;
+    s.offset = Vec2D.fromValues(100, 600);
+    s.player!.component.position.y += 120;
+    s.player!.component.position.x -= 50;
     if (playerCount == 2) {
       s.player?.fill?.paint.color = Colors.black.withOpacity(0);
-      s.player!.component.position.x += 250;
+      s.player!.component.position.x += 200;
     } else {
-      s.player!.component.position.x -= 250;
-      s.offset = Vec2D.fromValues(s.player!.component.position.x,
-          s.player!.component.position.y - 250 - 150);
+      s.player!.component.position.x -= 200;
     }
     s.player?.targetSpawn = s.player!.target!.translation;
   }
