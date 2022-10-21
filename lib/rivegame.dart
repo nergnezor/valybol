@@ -61,6 +61,7 @@ Future<List<CustomRiveComponent>> loadRive(
   final components = <CustomRiveComponent>[];
   var c = await addRiveArtboard('assets/valybol.riv', size, gamestate);
   components.add(c);
+  gamestate.component = c;
   await addPlayer(size, gamestate, components);
   await addPlayer(size, gamestate, components);
 
@@ -103,8 +104,8 @@ void parseArtboard(Artboard a, Gamestate g) {
         break;
       case 'ball':
         g.ball.shape = child as Shape;
-        child.x -= 100;
-        child.x -= 150;
+        // child.x -= 100;
+        // child.x -= 150;
         g.ball.spawn = child.translation;
         break;
       case 'ball ellipse':
@@ -127,6 +128,7 @@ void parseArtboard(Artboard a, Gamestate g) {
     p.component.position.y += 120 * g.scale;
     if (playerCount == 2) {
       p.component.flipHorizontallyAroundCenter();
+
       p.fill?.paint.color = Colors.black.withOpacity(0);
       p.component.position.x += 200 * g.scale;
       p.offset.x += p.component.width * g.scale + (g.scale - 1) * 400;
