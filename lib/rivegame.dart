@@ -45,7 +45,7 @@ Future<CustomRiveComponent> addRiveArtboard(
     String path, size, Gamestate gamestate) async {
   Artboard artboard = await loadArtboard(RiveFile.asset(path));
   final component = CustomRiveComponent(artboard, gamestate);
-  gamestate.scale = 1.5;
+  gamestate.scale = 2;
   component.scale = Vector2.all(gamestate.scale);
   component.position.x = (size.x - gamestate.scale * artboard.width) / 2;
   component.position.y = (size.y - gamestate.scale * artboard.height) / 2;
@@ -131,7 +131,8 @@ void parseArtboard(Artboard a, Gamestate g) {
       g.player!.component.flipHorizontallyAroundCenter();
       g.player?.fill?.paint.color = Colors.black.withOpacity(0);
       g.player!.component.position.x += 200 * g.scale;
-      g.player!.offset.x += g.player!.component.width * g.scale;
+      g.player!.offset.x +=
+          g.player!.component.width * g.scale + (g.scale - 1) * 400;
     } else {
       g.player!.component.position.x -= 200 * g.scale;
     }
