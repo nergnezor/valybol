@@ -7,7 +7,6 @@ import 'package:flame/input.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'gamestate.dart';
 import 'rivegame.dart';
-// import 'package:flame_audio/flame_audio.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 AudioPlayer? player;
@@ -56,9 +55,9 @@ class MyGame extends FlameGame with HasDraggables {
         .floor(); // ? 1 : 0;
     g.player = g.players[activeIndex];
     g.player?.xFactor = 0;
-    startBgmMusic();
 
     super.onDragStart(pointerId, info);
+    startBgmMusic();
   }
 
   @override
@@ -103,8 +102,14 @@ class MyGame extends FlameGame with HasDraggables {
   }
 
   Future<void> startBgmMusic() async {
-    // FlameAudio.bgm.initialize();
-    // FlameAudio.bgm.play('SalmonLakeShort91bpm.mp3');
-    await player?.play(AssetSource('SalmonLakeShort91bpm.mp3'));
+    if (player?.state == PlayerState.playing) {
+      // inputs.
+      // .controller.findInput<bool>('dress')?.change(true);})
+      return;
+    }
+    g.players.forEach((p) {
+      p.component.controller.inputs.first.value = true;
+    });
+    await player?.play(AssetSource('SalmonLake91bpm.ogg'));
   }
 }

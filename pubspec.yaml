@@ -24,7 +24,7 @@ flutter:
   assets:
     - assets/valybol.riv
     - assets/whale.riv
-    - assets/SalmonLakeShort91bpm.mp3
+    - assets/SalmonLake91bpm.ogg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

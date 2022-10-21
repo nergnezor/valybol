@@ -36,7 +36,6 @@ class CustomRiveComponent extends RiveComponent with Draggable {
     controller =
         StateMachineController.fromArtboard(artboard, 'State Machine 1')!;
 
-    bool? _levelInput = controller.findInput<bool>('dress')?.change(true);
     artboard.addController(controller);
     parseArtboard(artboard, gamestate);
     return super.onLoad();
@@ -84,6 +83,7 @@ Future<void> addPlayer(
   s.player = player;
   player.component = await addRiveArtboard('assets/whale.riv', size, s);
   components.add(player.component);
+  // bool? _levelInput = controller.findInput<bool>('dress')?.change(true);
 }
 
 int playerCount = 0;
