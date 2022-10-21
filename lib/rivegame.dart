@@ -110,7 +110,7 @@ void parseArtboard(Artboard a, Gamestate s) {
         break;
       case 'ball':
         s.ball.shape = child as Shape;
-        child.x -= 50 + 200;
+        child.x -= 50 + 200 - 350;
         s.ball.spawn = child.translation;
         // s.ball.spawn.y = child.y;
         break;
@@ -128,12 +128,14 @@ void parseArtboard(Artboard a, Gamestate s) {
 
   if (a.name == 'whale') {
     playerCount++;
-    s.offset = Vec2D.fromValues(100, 600);
+    s.player!.offset = Vec2D.fromValues(100, 600);
     s.player!.component.position.y += 120;
-    s.player!.component.position.x -= 50;
+    s.player!.component.position.x -= 60;
     if (playerCount == 2) {
+      s.player!.component.flipHorizontallyAroundCenter();
       s.player?.fill?.paint.color = Colors.black.withOpacity(0);
       s.player!.component.position.x += 200;
+      s.player!.offset.x = 600;
     } else {
       s.player!.component.position.x -= 200;
     }

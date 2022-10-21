@@ -16,16 +16,24 @@ class Ball {
   void update(double dt, Gamestate g) {
     isFalling = true;
     final offset = g.players.first.component.absoluteTopLeftPosition;
-    bottom = shape!.worldTranslation + g.offset + Vec2D.fromValues(0, radius!);
+    bottom = shape!.worldTranslation + Vec2D.fromValues(0, radius!);
+    int c = 0;
     for (var p in g.players) {
       moveTail(p, dt);
       final playerOffset = p.component.position;
       Vec2D tailPos = p.tail!.worldTranslation +
-          Vec2D.fromValues(playerOffset.x, playerOffset.y);
+          Vec2D.fromValues(playerOffset.x, playerOffset.y) -
+          p.offset;
       if (tailPos == Vec2D()) continue;
+      if (p.component.isFlippedHorizontally) {
+        tailPos.x = playerOffset.x - p.offset.x - p.tail!.worldTranslation.x;
+      }
       var dBallTail = bottom - tailPos;
+      if (++c == 2) {
+        print(dBallTail);
+      }
       if (bottom.y > tailPos.y && dBallTail.x.abs() < radius! * 3) {
-        print(p.component.position);
+        // print(p.component.position);
         isFalling = false;
         shape!.y -= dBallTail.y;
         if (dBallTail.x.abs() > 1) shape!.x -= (dBallTail.x / 4);
@@ -54,8 +62,9 @@ class Ball {
     final dTarget = p.target!.translation - p.targetSpawn;
     if (dTarget.x < 0 && !p.isCharging) {
       p.speed.y += 100 * dt;
-      p.speed.x = p.xFactor * p.speed.y;
-      p.target?.y += p.speed.x;
+      p.speed.x =
+          p.xFactor * p.speed.y * (p.component.isFlippedHorizontally ? -1 : 1);
+      p.target?.y += p.speed.x * (p.component.isFlippedHorizontally ? -1 : 1);
       p.target?.x += p.speed.y;
     } else {
       p.speed = Vec2D();

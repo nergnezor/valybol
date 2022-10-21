@@ -72,9 +72,11 @@ class MyGame extends FlameGame with HasDraggables {
     if (p!.target!.y < p.constraint!.top ||
         p.target!.y > p.constraint!.bottom) {
       p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
-      p.component.position.x += info.delta.game.x;
+      // p.component.position.x += info.delta.game.x;
+      p.rootBone?.x +=
+          info.delta.game.x * (p.component.isFlippedHorizontally ? -1 : 1);
     }
-    p?.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
+    p.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
     super.onDragUpdate(pointerId, info);
   }
 
