@@ -19,4 +19,6 @@ class Player {
   Rect? constraint;
   Fill? fill;
   Vec2D offset = Vec2D();
+  double clampStart = 0;
+  double clampEnd = 0;
 }

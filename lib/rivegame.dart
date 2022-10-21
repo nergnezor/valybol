@@ -75,6 +75,7 @@ Future<void> addPlayer(
 int playerCount = 0;
 void parseArtboard(Artboard a, Gamestate g) {
   g.player = g.players[playerCount];
+  final p = g.player!;
   a.forEachComponent((child) {
     switch (child.name) {
       case 'target':
@@ -83,9 +84,9 @@ void parseArtboard(Artboard a, Gamestate g) {
         if (!Settings.showTargets) {
           child.opacity = 0;
         }
-        g.player?.target = child;
+        p.target = child;
         final c = child.children.whereType<TranslationConstraint>().single;
-        g.player?.constraint =
+        p.constraint =
             Rect.fromLTRB(c.minValue, c.minValueY, c.maxValue, c.maxValueY);
         c.strength = 0;
         break;
@@ -94,7 +95,7 @@ void parseArtboard(Artboard a, Gamestate g) {
         g.court = Vec2D.fromValues(child.width, child.height);
         break;
       case 'tail':
-        g.player?.tail = child as Node;
+        p.tail = child as Node;
         break;
       case 'ball':
         g.ball.shape = child as Shape;
@@ -106,29 +107,32 @@ void parseArtboard(Artboard a, Gamestate g) {
         g.ball.radius = (child as Ellipse).radiusX;
         break;
       case 'val':
-        g.player?.rootBone = child as RootBone;
+        p.rootBone = child as RootBone;
         break;
       case 'body':
-        g.player?.fill = (child as Node).children.whereType<Fill>().last;
+        p.fill = (child as Node).children.whereType<Fill>().last;
         break;
     }
   });
 
   if (a.name == 'whale') {
+    // p.component.scale = Vector2.all(0.7);
     playerCount++;
-    g.player!.offset = Vec2D.fromValues(
-        g.player!.component.position.x - (g.scale - 1) * 200,
-        g.player!.component.position.y + (g.scale - 1) * 120);
-    g.player!.component.position.y += 100 * g.scale;
+    p.offset = Vec2D.fromValues(p.component.position.x - (g.scale - 1) * 200,
+        p.component.position.y + (g.scale - 1) * 120);
+    p.component.position.y += 100 * g.scale;
     if (playerCount == 2) {
-      g.player!.component.flipHorizontallyAroundCenter();
-      g.player?.fill?.paint.color = Colors.black.withOpacity(0);
-      g.player!.component.position.x += 200 * g.scale;
-      g.player!.offset.x +=
-          g.player!.component.width * g.scale + (g.scale - 1) * 400;
+      p.component.flipHorizontallyAroundCenter();
+      p.fill?.paint.color = Colors.black.withOpacity(0);
+      p.component.position.x += 200 * g.scale;
+      p.offset.x += p.component.width * g.scale + (g.scale - 1) * 400;
+      p.clampStart = 0;
+      p.clampEnd = 150;
     } else {
-      g.player!.component.position.x -= 200 * g.scale;
+      p.component.position.x -= 200 * g.scale;
+      p.clampStart = -100;
+      p.clampEnd = 100;
     }
-    g.player?.targetSpawn = g.player!.target!.translation;
+    p.targetSpawn = p.target!.translation;
   }
 }
