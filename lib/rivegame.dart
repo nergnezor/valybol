@@ -28,7 +28,6 @@ class CustomRiveComponent extends RiveComponent with Draggable {
       : super(
             artboard: artboard, size: Vector2(artboard.width, artboard.height));
   late StateMachineController controller;
-  // late OneShotAnimation ani;
   late Fill fill;
 
   @override
@@ -83,7 +82,6 @@ Future<void> addPlayer(
   s.player = player;
   player.component = await addRiveArtboard('assets/whale.riv', size, s);
   components.add(player.component);
-  // bool? _levelInput = controller.findInput<bool>('dress')?.change(true);
 }
 
 int playerCount = 0;

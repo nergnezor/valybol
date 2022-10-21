@@ -108,8 +108,14 @@ class MyGame extends FlameGame with HasDraggables {
       return;
     }
     g.players.forEach((p) {
-      p.component.controller.inputs.first.value = true;
+      p.component.controller.inputs.first.change(true);
     });
+    player?.onPlayerComplete.listen((event) {
+      g.players.forEach((p) {
+        p.component.controller.inputs.first.change(false);
+      });
+    });
+    // player!.setReleaseMode(ReleaseMode.loop);
     await player?.play(AssetSource('SalmonLake91bpm.ogg'));
   }
 }
