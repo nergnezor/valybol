@@ -17,7 +17,7 @@ class Player {
   // Vec2D ballSpawn = Vec2D();
   // Vec2D speed = Vec2D();
   late CustomRiveComponent component;
-  // RootBone? rootBone;
+  RootBone? rootBone;
   Rect? constraint;
   Fill? fill;
   // Vec2D offset = Vec2D();

@@ -83,7 +83,7 @@ Future<void> addPlayer(
 int playerCount = 0;
 void parseArtboard(Artboard a, Gamestate g) {
   // g.player = g.players[playerCount];
-  final p = g.p!;
+  final p = g.p;
   a.forEachComponent((child) {
     switch (child.name) {
       case 'target':
@@ -116,11 +116,11 @@ void parseArtboard(Artboard a, Gamestate g) {
         break;
       case 'val':
         // print('val: ' + child.toString());
-        if (child.name != 'whale') {
-          g.opponent?.rootBone = child as RootBone;
-        } else {
-          // p.rootBone = child as RootBone;
-        }
+        // if (child.name != 'whale') {
+        //   g.opponent?.rootBone = child as RootBone;
+        // } else {
+        p.rootBone = child as RootBone;
+        // }
         break;
       case 'body':
         p.fill = (child as Node).children.whereType<Fill>().last;
@@ -129,27 +129,6 @@ void parseArtboard(Artboard a, Gamestate g) {
   });
 
   if (a.name == 'whale') {
-    // p.component.scale = Vector2.all(0.7);
-    // playerCount++;
-    // p.offset = Vec2D.fromValues(p.component.position.x - (g.scale - 1) * 200,
-    //     p.component.position.y + (g.scale - 1) * 120);
-    // if (playerCount == 2) {
-    //   // p.component.flipHorizontallyAroundCenter();
-
-    //   p.fill?.paint.color = Colors.black.withOpacity(0);
-    //   // p.component.position.x += 200 * g.scale;
-    //   // p.offset.x += p.component.width * g.scale + (g.scale - 1) * 400;
-    //   p.clampStart = 0;
-    //   p.clampEnd = 130;
-    //   p.component.scale *= 15.0 / 23.0;
-    //   p.component.artboard.opacity = 0;
-    //   // p.component.position.y =
-    // } else {
     p.component.position.y += 160 * g.scale;
-    //   // p.component.position.x -= 200 * g.scale;
-    //   p.clampStart = -100;
-    //   p.clampEnd = 100;
-    // }
-    // p.targetSpawn = p.target!.translation;
   }
 }

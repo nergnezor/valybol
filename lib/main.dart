@@ -74,31 +74,26 @@ class MyGame extends FlameGame with HasDraggables {
     p.target!.y += info.delta.game.x;
     if (p.target!.y < p.constraint!.top || p.target!.y > p.constraint!.bottom) {
       p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
+      p.rootBone?.x += info.delta.game.x;
+      p.rootBone?.x = p.rootBone!.x.clamp(-300, 300);
+
       // return;
     }
     if (!p.isCharging || !p.hasBall) return;
-    g.ball.shape!.x = p.target!.y;
-    g.ball.shape!.x = g.ball.shape!.x.clamp(-100, 100);
+    g.ball.shape!.x = p.target!.y + p.rootBone!.x;
 
-    //   // p.component.position.x += info.delta.game.x;
-    //   p.rootBone?.x +=
-    //       info.delta.game.x * (p.component.isFlippedHorizontally ? -1 : 1);
-    // }
-    // p.target?.x = p.target!.x.clamp(p.constraint!.left, p.constraint!.right);
     super.onDragUpdate(pointerId, info);
   }
 
   @override
   void update(double dt) {
-    // if (g.p.isCharging && !g.p.hasBall) {
-    //   g.p.isCharging = false;
-    //   g.p.component.controller.inputs.first.change(true);
-    // }
     if (g.ball.velocity.y == 0 && !g.p.hasBall && g.p.isCharging) {
-      final dBall = g.ball.shape!.x - g.p.target!.y;
-      print(dBall);
-      if (dBall.abs() < 10) {
+      final dBall = g.ball.shape!.x - g.p.target!.y - g.p.rootBone!.x;
+      if (dBall.abs() < 50) {
+        // print(dBall);
         g.p.hasBall = true;
+        g.component.controller.inputs.first.change(true);
+        g.ball.velocity.x = 0;
       }
     }
     g.ball.update(dt, g);
