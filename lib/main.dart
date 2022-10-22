@@ -65,7 +65,7 @@ class MyGame extends FlameGame with HasDraggables {
       }
       g.p.isCharging = true;
     }
-    // startBgmMusic();
+    startBgmMusic();
   }
 
   @override
