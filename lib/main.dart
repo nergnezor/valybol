@@ -22,14 +22,15 @@ Future<void> main() async {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     } catch (e) {}
   }
-  // SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.landscapeRight,
-  //   DeviceOrientation.landscapeLeft,
-  // ]);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    // DeviceOrientation.landscapeLeft,
+  ]);
 }
 
 class MyGame extends FlameGame with HasDraggables {
   Gamestate g = Gamestate();
+  bool waitToDropBall = false;
   @override
   Color backgroundColor() => const Color(0xff471717);
 
@@ -42,35 +43,27 @@ class MyGame extends FlameGame with HasDraggables {
 
   @override
   void onDragEnd(int pointerId, DragEndInfo info) {
-    // g.player?.isCharging = false;
-    // final d = g.player!.target!.translation - g.player!.targetSpawn;
-    // if (!d.x.isNaN) g.player!.xFactor = -2 * d.y / d.x;
-    // g.player!.speed.y = 0;
-    // // g.players[1].shooting = false;
-    // super.onDragEnd(pointerId, info);k
     if (g.p.isCharging) {
       g.p.isCharging = false;
       g.p.component.controller.inputs.first.change(true);
-      g.component.controller.inputs.last.change(true);
+      if (g.p.hasBall) {
+        g.p.hasBall = false;
+        g.ball.velocity.x = 3 * g.ball.shape!.x;
+        g.p.isCharging = false;
+        g.component.controller.inputs.last.change(true);
+      }
     }
   }
 
   @override
   void onDragStart(int pointerId, DragStartInfo info) {
-    // int activeIndex = (info.eventPosition.game.x / (size.x / g.players.length))
-    //     .floor(); // ? 1 : 0;
-    // g.player = g.players[activeIndex];
-    // g.player?.xFactor = 0;
-
-    // super.onDragStart(pointerId, info);
-
     if (!g.p.isCharging) {
       g.p.component.controller.inputs.last.change(true);
-      // if()
-      g.component.controller.inputs.first.change(true);
+      if (g.ball.velocity.y == 0 && g.p.hasBall) {
+        g.component.controller.inputs.first.change(true);
+        g.ball.velocity.x = 0;
+      }
       g.p.isCharging = true;
-      // g.ball.velocity.x = 0;
-      // p?.target!.x -= info.delta.game.y;
     }
     // startBgmMusic();
   }
@@ -81,9 +74,11 @@ class MyGame extends FlameGame with HasDraggables {
     p.target!.y += info.delta.game.x;
     if (p.target!.y < p.constraint!.top || p.target!.y > p.constraint!.bottom) {
       p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
-      return;
+      // return;
     }
+    if (!p.isCharging || !p.hasBall) return;
     g.ball.shape!.x = p.target!.y;
+    g.ball.shape!.x = g.ball.shape!.x.clamp(-100, 100);
 
     //   // p.component.position.x += info.delta.game.x;
     //   p.rootBone?.x +=
@@ -95,6 +90,17 @@ class MyGame extends FlameGame with HasDraggables {
 
   @override
   void update(double dt) {
+    // if (g.p.isCharging && !g.p.hasBall) {
+    //   g.p.isCharging = false;
+    //   g.p.component.controller.inputs.first.change(true);
+    // }
+    if (g.ball.velocity.y == 0 && !g.p.hasBall && g.p.isCharging) {
+      final dBall = g.ball.shape!.x - g.p.target!.y;
+      print(dBall);
+      if (dBall.abs() < 10) {
+        g.p.hasBall = true;
+      }
+    }
     g.ball.update(dt, g);
     super.update(dt);
   }

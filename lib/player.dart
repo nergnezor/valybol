@@ -8,19 +8,19 @@ import 'package:rive/src/rive_core/bones/root_bone.dart';
 
 class Player {
   Node? target;
-  Node? tail;
+  // Node? tail;
   bool isCharging = false;
-  bool wasCharging = false;
-  bool shooting = false;
-  double xFactor = 0;
-  Vec2D targetSpawn = Vec2D();
-  Vec2D ballSpawn = Vec2D();
-  Vec2D speed = Vec2D();
+  bool hasBall = true;
+  // bool shooting = false;
+  // double xFactor = 0;
+  // Vec2D targetSpawn = Vec2D();
+  // Vec2D ballSpawn = Vec2D();
+  // Vec2D speed = Vec2D();
   late CustomRiveComponent component;
-  RootBone? rootBone;
+  // RootBone? rootBone;
   Rect? constraint;
   Fill? fill;
-  Vec2D offset = Vec2D();
-  double clampStart = 0;
-  double clampEnd = 0;
+  // Vec2D offset = Vec2D();
+  // double clampStart = 0;
+  // double clampEnd = 0;
 }

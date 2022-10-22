@@ -102,14 +102,14 @@ void parseArtboard(Artboard a, Gamestate g) {
         child = child as Rectangle;
         g.court = Vec2D.fromValues(child.width, child.height);
         break;
-      case 'tail':
-        p.tail = child as Node;
-        break;
+      // case 'tail':
+      //   p.tail = child as Node;
+      //   break;
       case 'ball':
         g.ball.shape = child as Shape;
         // child.y += 100;
         // child.x -= 150;
-        g.ball.spawn = child.translation;
+        // g.ball.spawn = child.translation;
         break;
       case 'ball ellipse':
         g.ball.radius = (child as Ellipse).radiusX;
@@ -119,7 +119,7 @@ void parseArtboard(Artboard a, Gamestate g) {
         if (child.name != 'whale') {
           g.opponent?.rootBone = child as RootBone;
         } else {
-          p.rootBone = child as RootBone;
+          // p.rootBone = child as RootBone;
         }
         break;
       case 'body':
