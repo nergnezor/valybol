@@ -1,4 +1,4 @@
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:rive/math.dart';
 import 'package:rive/rive.dart';
@@ -15,14 +15,16 @@ class Ball {
   // Vec2D bottom = Vec2D();
 
   void update(double dt, Gamestate g) {
-    if (g.player!.isCharging) {}
+    if (g.player.isCharging) {
+      return;
+    }
     // isFalling = true;
     // // final offset = g.players.first.component.absoluteTopLeftPosition;
     // // bottom = shape!.worldTranslation + Vec2D.fromValues(0, radius!);
     // int c = 0;
     // // if (!g.players[0].isCharging) moveOpponent(g.players[1]);
     // for (var p in g.players) {
-    final ballOffset = getBallOffset(g.player);
+    // final ballOffset = getBallOffset(g.player);
     //   moveTail(p, dt);
     //   // print(dBallTail);
     //   if (ballOffset.y > 0 &&
@@ -50,23 +52,25 @@ class Ball {
     //   // }
     // }
     // wasFalling = isFalling;
-    // shape!.x += velocity.x * dt;
+    shape!.x += velocity.x * dt;
+    shape!.x = shape!.x.clamp(-100, 100);
+
     // shape!.y -= velocity.y * dt;
   }
 
-  getBallOffset(Player p) {
-    final playerOffset = p.component.position;
-    Vec2D tailPos = p.tail!.worldTranslation +
-        Vec2D.fromValues(playerOffset.x, playerOffset.y) -
-        p.offset;
-    if (tailPos == Vec2D()) return Vec2D.fromValues(1000, 1000);
-    if (p.component.isFlippedHorizontally) {
-      tailPos.x = playerOffset.x - p.offset.x - p.tail!.worldTranslation.x;
-    }
-    Vec2D dBallTail = shape!.worldTranslation - tailPos;
-    dBallTail.y += radius!;
-    return dBallTail;
-  }
+  // getBallOffset(Player p) {
+  //   final playerOffset = p.component.position;
+  //   Vec2D tailPos = p.tail!.worldTranslation +
+  //       Vec2D.fromValues(playerOffset.x, playerOffset.y) -
+  //       p.offset;
+  //   if (tailPos == Vec2D()) return Vec2D.fromValues(1000, 1000);
+  //   if (p.component.isFlippedHorizontally) {
+  //     tailPos.x = playerOffset.x - p.offset.x - p.tail!.worldTranslation.x;
+  //   }
+  //   Vec2D dBallTail = shape!.worldTranslation - tailPos;
+  //   dBallTail.y += radius!;
+  //   return dBallTail;
+  // }
 
   // void moveTail(Player p, double dt) {
   //   final dTarget = p.target!.translation - p.targetSpawn;

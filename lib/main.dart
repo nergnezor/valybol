@@ -51,7 +51,7 @@ class MyGame extends FlameGame with HasDraggables {
     if (g.player.isCharging) {
       g.player.isCharging = false;
       g.player.component.controller.inputs.first.change(true);
-      g.component.controller.inputs.single.change(true);
+      g.component.controller.inputs.last.change(true);
     }
   }
 
@@ -70,17 +70,20 @@ class MyGame extends FlameGame with HasDraggables {
   @override
   void onDragUpdate(int pointerId, DragUpdateInfo info) {
     final p = g.player;
-    // p?.target!.y +=
-    //     info.delta.game.x * (p.component.isFlippedHorizontally ? -1 : 1);
+    p.target!.y += info.delta.game.x;
     if (info.delta.game.y > 5 && !p.isCharging) {
       g.player.component.controller.inputs.first.change(true);
-      g.component.controller.inputs.single.change(true);
+      g.component.controller.inputs.first.change(true);
       p.isCharging = true;
+      // g.ball.velocity.x = 0;
       // p?.target!.x -= info.delta.game.y;
     }
-    // if (p!.target!.y < p.constraint!.top ||
-    //     p.target!.y > p.constraint!.bottom) {
-    //   p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
+    if (p.target!.y < p.constraint!.top || p.target!.y > p.constraint!.bottom) {
+      p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
+      return;
+    }
+    g.ball.shape!.x = p.target!.y;
+
     //   // p.component.position.x += info.delta.game.x;
     //   p.rootBone?.x +=
     //       info.delta.game.x * (p.component.isFlippedHorizontally ? -1 : 1);
