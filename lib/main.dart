@@ -48,9 +48,9 @@ class MyGame extends FlameGame with HasDraggables {
     // g.player!.speed.y = 0;
     // // g.players[1].shooting = false;
     // super.onDragEnd(pointerId, info);k
-    if (g.player.isCharging) {
-      g.player.isCharging = false;
-      g.player.component.controller.inputs.first.change(true);
+    if (g.p.isCharging) {
+      g.p.isCharging = false;
+      g.p.component.controller.inputs.first.change(true);
       g.component.controller.inputs.last.change(true);
     }
   }
@@ -62,22 +62,23 @@ class MyGame extends FlameGame with HasDraggables {
     // g.player = g.players[activeIndex];
     // g.player?.xFactor = 0;
 
-    super.onDragStart(pointerId, info);
+    // super.onDragStart(pointerId, info);
 
-    startBgmMusic();
+    if (!g.p.isCharging) {
+      g.p.component.controller.inputs.last.change(true);
+      // if()
+      g.component.controller.inputs.first.change(true);
+      g.p.isCharging = true;
+      // g.ball.velocity.x = 0;
+      // p?.target!.x -= info.delta.game.y;
+    }
+    // startBgmMusic();
   }
 
   @override
   void onDragUpdate(int pointerId, DragUpdateInfo info) {
-    final p = g.player;
+    final p = g.p;
     p.target!.y += info.delta.game.x;
-    if (info.delta.game.y > 5 && !p.isCharging) {
-      g.player.component.controller.inputs.first.change(true);
-      g.component.controller.inputs.first.change(true);
-      p.isCharging = true;
-      // g.ball.velocity.x = 0;
-      // p?.target!.x -= info.delta.game.y;
-    }
     if (p.target!.y < p.constraint!.top || p.target!.y > p.constraint!.bottom) {
       p.target?.y = p.target!.y.clamp(p.constraint!.top, p.constraint!.bottom);
       return;
@@ -128,7 +129,7 @@ class MyGame extends FlameGame with HasDraggables {
 
   void togglePlayerInput(bool b) {
     // for (var p in g.players) {
-    g.player.component.controller.inputs.last.change(b);
+    g.p.component.controller.inputs.last.change(b);
     // }
   }
 }

@@ -8,7 +8,7 @@ import 'rivegame.dart';
 class Gamestate {
   // List<Player> players = <Player>[];
   Ball ball = Ball();
-  late Player player;
+  late Player p;
   Vec2D? court;
   double scale = 0;
   late CustomRiveComponent component;

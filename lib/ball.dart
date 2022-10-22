@@ -15,7 +15,7 @@ class Ball {
   // Vec2D bottom = Vec2D();
 
   void update(double dt, Gamestate g) {
-    if (g.player.isCharging) {
+    if (g.p.isCharging) {
       return;
     }
     // isFalling = true;

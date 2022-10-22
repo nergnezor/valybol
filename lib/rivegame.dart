@@ -75,7 +75,7 @@ Future<void> addPlayer(
     Vector2 size, Gamestate s, List<CustomRiveComponent> components) async {
   final player = Player();
   // s.players.add(player);
-  s.player = player;
+  s.p = player;
   player.component = await addRiveArtboard('assets/whale.riv', size, s);
   components.add(player.component);
 }
@@ -83,7 +83,7 @@ Future<void> addPlayer(
 int playerCount = 0;
 void parseArtboard(Artboard a, Gamestate g) {
   // g.player = g.players[playerCount];
-  final p = g.player!;
+  final p = g.p!;
   a.forEachComponent((child) {
     switch (child.name) {
       case 'target':
