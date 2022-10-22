@@ -1,3 +1,4 @@
+// import 'dart:html';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flame/components.dart';
@@ -56,14 +57,16 @@ Future<CustomRiveComponent> addRiveArtboard(
   return component;
 }
 
-Future<List<CustomRiveComponent>> loadRive(
-    Vector2 size, Gamestate gamestate) async {
+Future<List<CustomRiveComponent>> loadRive(Vector2 size, Gamestate g) async {
   final components = <CustomRiveComponent>[];
-  var c = await addRiveArtboard('assets/valybol.riv', size, gamestate);
+  var c = await addRiveArtboard('assets/valybol.riv', size, g);
   components.add(c);
-  gamestate.component = c;
-  await addPlayer(size, gamestate, components);
-  await addPlayer(size, gamestate, components);
+  g.component = c;
+  // final player = Player();
+  // g.players.add(player);
+
+  await addPlayer(size, g, components);
+  // await addPlayer(size, gamestate, components);
 
   return components;
 }
@@ -71,7 +74,7 @@ Future<List<CustomRiveComponent>> loadRive(
 Future<void> addPlayer(
     Vector2 size, Gamestate s, List<CustomRiveComponent> components) async {
   final player = Player();
-  s.players.add(player);
+  // s.players.add(player);
   s.player = player;
   player.component = await addRiveArtboard('assets/whale.riv', size, s);
   components.add(player.component);
@@ -79,7 +82,7 @@ Future<void> addPlayer(
 
 int playerCount = 0;
 void parseArtboard(Artboard a, Gamestate g) {
-  g.player = g.players[playerCount];
+  // g.player = g.players[playerCount];
   final p = g.player!;
   a.forEachComponent((child) {
     switch (child.name) {
@@ -104,7 +107,7 @@ void parseArtboard(Artboard a, Gamestate g) {
         break;
       case 'ball':
         g.ball.shape = child as Shape;
-        // child.x -= 100;
+        // child.y += 100;
         // child.x -= 150;
         g.ball.spawn = child.translation;
         break;
@@ -112,7 +115,12 @@ void parseArtboard(Artboard a, Gamestate g) {
         g.ball.radius = (child as Ellipse).radiusX;
         break;
       case 'val':
-        p.rootBone = child as RootBone;
+        // print('val: ' + child.toString());
+        if (child.name != 'whale') {
+          g.opponent?.rootBone = child as RootBone;
+        } else {
+          p.rootBone = child as RootBone;
+        }
         break;
       case 'body':
         p.fill = (child as Node).children.whereType<Fill>().last;
@@ -122,23 +130,26 @@ void parseArtboard(Artboard a, Gamestate g) {
 
   if (a.name == 'whale') {
     // p.component.scale = Vector2.all(0.7);
-    playerCount++;
-    p.offset = Vec2D.fromValues(p.component.position.x - (g.scale - 1) * 200,
-        p.component.position.y + (g.scale - 1) * 120);
-    p.component.position.y += 120 * g.scale;
-    if (playerCount == 2) {
-      p.component.flipHorizontallyAroundCenter();
+    // playerCount++;
+    // p.offset = Vec2D.fromValues(p.component.position.x - (g.scale - 1) * 200,
+    //     p.component.position.y + (g.scale - 1) * 120);
+    // if (playerCount == 2) {
+    //   // p.component.flipHorizontallyAroundCenter();
 
-      p.fill?.paint.color = Colors.black.withOpacity(0);
-      p.component.position.x += 200 * g.scale;
-      p.offset.x += p.component.width * g.scale + (g.scale - 1) * 400;
-      p.clampStart = 0;
-      p.clampEnd = 130;
-    } else {
-      p.component.position.x -= 200 * g.scale;
-      p.clampStart = -100;
-      p.clampEnd = 100;
-    }
-    p.targetSpawn = p.target!.translation;
+    //   p.fill?.paint.color = Colors.black.withOpacity(0);
+    //   // p.component.position.x += 200 * g.scale;
+    //   // p.offset.x += p.component.width * g.scale + (g.scale - 1) * 400;
+    //   p.clampStart = 0;
+    //   p.clampEnd = 130;
+    //   p.component.scale *= 15.0 / 23.0;
+    //   p.component.artboard.opacity = 0;
+    //   // p.component.position.y =
+    // } else {
+    p.component.position.y += 160 * g.scale;
+    //   // p.component.position.x -= 200 * g.scale;
+    //   p.clampStart = -100;
+    //   p.clampEnd = 100;
+    // }
+    // p.targetSpawn = p.target!.translation;
   }
 }

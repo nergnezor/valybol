@@ -1,12 +1,16 @@
 import 'dart:ui';
 import 'package:rive/math.dart';
+import 'package:valybol/opponent.dart';
 import 'ball.dart';
 import 'player.dart';
+import 'rivegame.dart';
 
 class Gamestate {
-  List<Player> players = <Player>[];
+  // List<Player> players = <Player>[];
   Ball ball = Ball();
-  Player? player;
+  late Player player;
   Vec2D? court;
   double scale = 0;
+  late CustomRiveComponent component;
+  Opponent? opponent;
 }
