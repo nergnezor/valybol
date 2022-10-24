@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 void main() {
-  runApp(MaterialApp(home: SimpleAnimation()));
+  runApp(const MaterialApp(home: Valybol()));
 }
 
-class SimpleAnimation extends StatelessWidget {
-  const SimpleAnimation({Key? key}) : super(key: key);
+class Valybol extends StatelessWidget {
+  const Valybol({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: RiveAnimation.asset(
-          'assets/valybol.riv',
-        ),
+        body: Center(
+      child: RiveAnimation.asset(
+        'assets/valybol.riv',
+        fit: BoxFit.cover,
+        animations: ['waves'],
+        stateMachines: ['State Machine 1'],
       ),
-    );
+    ));
   }
 }
