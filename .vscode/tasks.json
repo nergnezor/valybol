@@ -11,7 +11,9 @@
 			],
 			"problemMatcher": [],
 			"label": "rive_generator",
-			"detail": ""
+			"detail": "",
+			// "options": {"cwd": "../"}
+
 		}
 	]
 }

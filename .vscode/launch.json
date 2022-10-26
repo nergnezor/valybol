@@ -7,7 +7,7 @@
         {
             "name": "valybol",
             "request": "launch",
-            "preLaunchTask": "rive_generator",
+            // "preLaunchTask": "rive_generator",
             "type": "dart"
         },
         {

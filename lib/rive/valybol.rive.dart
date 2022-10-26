@@ -9,17 +9,19 @@ class Valybol {
   static final assetPath = 'valybol.riv';
 
   Valybol._(this.file);
-
+  
   static Future<Valybol> load() async {
-    final riveFile = rive.RiveFile.import(await rootBundle.load('valybol.riv'));
+    final riveFile = rive.RiveFile.import(await rootBundle.load('valybol.riv')); 
     return Valybol._(riveFile);
   }
 
   Beach? _beach;
   Beach get beach => _beach ??= Beach(file.artboardByName('Beach')!);
-
+    
   Whale? _whale;
   Whale get whale => _whale ??= Whale(file.artboardByName('whale')!);
+    
+
 }
 
 class Beach {
@@ -28,11 +30,8 @@ class Beach {
 
   final animations = const BeachAnimations();
 
-  BeachStateMachine1StateMachine getBeachStateMachine1StateMachine(
-      [core.OnStateChange? onStateChange]) {
-    return BeachStateMachine1StateMachine(this
-        .artboard
-        .stateMachineByName("State Machine 1", onChange: onStateChange)!);
+  BeachStateMachine1StateMachine getBeachStateMachine1StateMachine([core.OnStateChange? onStateChange]) {
+    return BeachStateMachine1StateMachine(this.artboard.stateMachineByName("State Machine 1",onChange: onStateChange)!);
   }
 }
 
@@ -50,16 +49,19 @@ class BeachStateMachine1StateMachine {
   final rive.StateMachineController controller;
   final rive.SMITrigger charge;
   final rive.SMITrigger shoot;
-  BeachStateMachine1StateMachine(this.controller)
-      : charge = controller.findInput<bool>('charge') as rive.SMITrigger,
-        shoot = controller.findInput<bool>('shoot') as rive.SMITrigger;
+  BeachStateMachine1StateMachine(this.controller) :
+    charge = controller.findInput<bool>('charge') as rive.SMITrigger,
+    shoot = controller.findInput<bool>('shoot') as rive.SMITrigger;
 }
+
 
 class Whale {
   final rive.Artboard artboard;
   Whale(this.artboard);
 
   final animations = const WhaleAnimations();
+
+  
 }
 
 class WhaleAnimations {
@@ -69,3 +71,7 @@ class WhaleAnimations {
   final String breatheold = "breathe old";
   const WhaleAnimations();
 }
+
+
+
+ 
