@@ -18,11 +18,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  rive_generator:
+    git:
+      url: https://github.com/ronba/rive-tools.git
+      path: packages/rive_generator
+
 flutter:
   uses-material-design: true
   assets:
     - assets/valybol.riv
-    - assets/new_file.riv
+  
     - assets/SalmonLake91bpm.ogg
 
   # An image asset can refer to one or more resolution-specific "variants", see
