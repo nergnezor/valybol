@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
           fit: BoxFit.cover,
           Valybol.assetPath,
           animations: [const BeachAnimations().waves],
+          stateMachines: const ["State Machine 1"],
         ),
       ),
       // if (valybol != null) ...[
