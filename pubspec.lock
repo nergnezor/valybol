@@ -135,7 +135,7 @@ packages:
     description:
       path: "packages/rive_generator"
       ref: HEAD
-      resolved-ref: "0cb61dc6a493aa3dc5045985104fe71b393816a8"
+      resolved-ref: f5a33cc4f2ecb264b0dfc10667f46f6c092fcb83
       url: "https://github.com/ronba/rive-tools.git"
     source: git
     version: "1.0.0"
