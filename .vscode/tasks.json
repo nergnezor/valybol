@@ -7,7 +7,7 @@
 			"args": [
 				"pub",
 				"run",
-				"rive_generator"
+				"flutter_rive_generator"
 			],
 			"problemMatcher": [],
 			"label": "rive_generator",
