@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'rive/valybol.rive.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
@@ -44,17 +46,23 @@ class _MyHomePageState extends State<MyHomePage> {
         r.beach.artboard.addController(valybolController!.controller);
       });
     });
+    // set timed collision detection
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (valybolController != null) {
+        print(valybol!.ball.artboard.x);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final valybol = this.valybol;
+    // final valybol = this.valybol;
     return Scaffold(
       body: Center(
         child: RiveAnimation.asset(
           fit: BoxFit.cover,
           Valybol.assetPath,
-          animations: [const BeachAnimations().waves],
+          // animations: [valybol.beach.],
           stateMachines: const ["State Machine 1"],
         ),
       ),
